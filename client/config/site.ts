@@ -46,5 +46,5 @@ export const siteConfig = {
     adminLinks,
   },
   // Default to the same port as the generated OpenAPI spec (5050) so local auth works out of the box.
-  apiBaseUrl: process.env.API_BASE_URL || "http://localhost:5050/api",
+  apiBaseUrl: process.env.API_BASE_URL || "https://csk-choir-hub-6v5l.vercel.app/api",
 };
