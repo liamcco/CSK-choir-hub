@@ -15,7 +15,7 @@ export const prisma =
     log: logPrismaQueries ? ["query", "error", "warn"] : ["error", "warn"],
     adapter: new PrismaPg(
       new Pool({
-        connectionString: process.env.DATABASE_URL,
+        connectionString: process.env.POSTGRES_URL,
       }),
     ),
   });
