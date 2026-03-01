@@ -16,6 +16,7 @@ export const prisma =
     adapter: new PrismaPg(
       new Pool({
         connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
       }),
     ),
   });

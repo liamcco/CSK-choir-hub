@@ -12,6 +12,7 @@ interface CustomLogger extends winston.Logger {
 }
 
 const { combine, timestamp, printf, colorize } = winston.format;
+
 const isServerlessRuntime = process.env.VERCEL === "1";
 
 // Custom log format

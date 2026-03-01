@@ -8,6 +8,10 @@ import helmet from "helmet";
 
 const app = express();
 
+// Vercel/other reverse proxies set X-Forwarded-* headers. Express must trust the
+// first proxy so middleware like express-rate-limit can identify client IPs.
+app.set("trust proxy", 1);
+
 /* ---- Security Middlewares ---- */
 app.use(helmet());
 
