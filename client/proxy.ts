@@ -16,6 +16,10 @@ export async function proxy(req: NextRequest) {
 
   const token = req.cookies.get("token")?.value;
 
+  console.log(token);
+
+  return NextResponse.next();
+
   // No token: send to login with return URL
   if (!token) {
     const loginUrl = new URL("/login", req.url);
