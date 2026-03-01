@@ -12,10 +12,8 @@ interface CustomLogger extends winston.Logger {
 }
 
 const { combine, timestamp, printf, colorize } = winston.format;
-const isServerlessRuntime =
-  process.env.VERCEL === "1" ||
-  Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME) ||
-  Boolean(process.env.LAMBDA_TASK_ROOT);
+
+const isServerlessRuntime = process.env.VERCEL === "1";
 
 // Custom log format
 const myFormat = printf(({ level, message, timestamp }) => {
