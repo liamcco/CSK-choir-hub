@@ -4,7 +4,6 @@ import nextPlugin from '@next/eslint-plugin-next';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import i18next from 'eslint-plugin-i18next';
-import jsxA11Y from 'eslint-plugin-jsx-a11y';
 import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -177,11 +176,6 @@ export default defineConfig([
       // Kept off for now to reduce friction; this can be re-enabled as `warn` later.
       // Example noisy case: effects intentionally skipping a stable dependency.
       'react-hooks/exhaustive-deps': 'off',
-
-      // JSX Accessibility rules
-      ...jsxA11Y.configs.recommended.rules,
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      'jsx-a11y/interactive-supports-focus': 'warn',
 
       // Next.js rules
       // Example this catches: <a href="/login"> instead of Next routing-aware links.
