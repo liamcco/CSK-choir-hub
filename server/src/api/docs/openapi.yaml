@@ -14,9 +14,9 @@ servers:
   - url: http://localhost:5050/api
     description: Local development server
     name: local
-  - url: https://portal.chalmerssangkor.se/api
-    description: Production server
-    name: prod
+
+security:
+  - authCookie: []
 
 # Paths grouped by feature area
 paths:
@@ -25,8 +25,6 @@ paths:
     $ref: '../routes/auth/auth.yaml#/paths/~1auth~1register'
   /auth/login:
     $ref: '../routes/auth/auth.yaml#/paths/~1auth~1login'
-  /auth/logout:
-    $ref: '../routes/auth/auth.yaml#/paths/~1auth~1logout'
   /auth/authenticate:
     $ref: '../routes/auth/auth.yaml#/paths/~1auth~1authenticate'
 
@@ -102,8 +100,6 @@ components:
       $ref: './components.yaml#/schemas/LoginUserInput'
     UpdateUserInput:
       $ref: './components.yaml#/schemas/UpdateUserInput'
-    CSKVoice:
-      $ref: './components.yaml#/schemas/CSKVoice'
 
     # Events
     CSKEventType:
@@ -150,6 +146,8 @@ components:
       $ref: './components.yaml#/schemas/SongKnowledgeLevel'
     KnownSong:
       $ref: './components.yaml#/schemas/KnownSong'
+    CSKVoice:
+      $ref: './components.yaml#/schemas/CSKVoice'
 
     # Errors
     Error:
@@ -173,8 +171,8 @@ components:
   # Common responses
   responses:
     DefaultError:
-      description: Unexpected error
-      content:
-        application/json:
-          schema:
-            $ref: './components.yaml#/schemas/Error'
+      $ref: './components.yaml#/responses/DefaultError'
+
+  securitySchemes:
+    authCookie:
+      $ref: './components.yaml#/securitySchemes/authCookie'

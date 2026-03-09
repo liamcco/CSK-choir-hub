@@ -1,7 +1,6 @@
-'use client';
-
 import React from 'react';
 
+import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'next-themes';
 
 /**
@@ -12,8 +11,10 @@ import { ThemeProvider } from 'next-themes';
  */
 export default function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
-      {children}
-    </ThemeProvider>
+    <NextIntlClientProvider>
+      <ThemeProvider attribute="class" defaultTheme="light">
+        {children}
+      </ThemeProvider>
+    </NextIntlClientProvider>
   );
 }

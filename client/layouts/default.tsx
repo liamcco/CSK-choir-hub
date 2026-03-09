@@ -1,28 +1,21 @@
 'use client';
 
-import { Link } from '@heroui/link';
-
-import { BottomNav, Navbar } from '@/components';
-
 export default function DefaultLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex h-screen flex-col">
-      <Navbar />
       <main className="container mx-auto max-w-7xl flex-grow px-6 pb-24 pt-8 sm:py-16">
         {children}
       </main>
       <footer className="hidden w-full items-center justify-center py-3 sm:flex">
-        <Link
-          isExternal
+        <a
           className="flex items-center gap-1 text-current"
           href="https://github.com/chalmers-choir"
           title="webmästariets github"
         >
           <span className="text-default-600">Powered by</span>
           <p className="text-primary">Chalmers Sångkörs Webbmästeri</p>
-        </Link>
+        </a>
       </footer>
-      <BottomNav />
     </div>
   );
 }
