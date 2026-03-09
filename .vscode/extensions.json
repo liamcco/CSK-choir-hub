@@ -1,8 +1,0 @@
-{
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "mhutchie.git-graph",
-    "eamodio.gitlens",
-    "dbaeumer.vscode-eslint"
-  ]
-}
