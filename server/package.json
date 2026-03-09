@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "concurrently -k -n api,server \"npm run api:watch\" \"npm run dev:server\"",
+    "dev": "concurrently -k -n api,server \"bun api:watch\" \"bun dev:server\"",
     "dev:server": "nodemon",
     "api:generate": "openapi --input ./src/api/docs/openapi.yaml --output ../client/lib/api-client --client fetch --useOptions --useUnionTypes",
-    "api:watch": "chokidar \"src/api/**/*.yaml\" -c \"npm run api:generate\"",
+    "api:watch": "chokidar \"src/api/**/*.yaml\" -c \"bun api:generate\"",
     "build": "tsc && tsc-alias",
     "setup-db": "ts-node src/scripts/setup-database.ts",
     "type-check": "tsc --noEmit",
