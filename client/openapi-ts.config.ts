@@ -2,7 +2,7 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   input: '../server/src/api/docs/openapi.yaml',
-  output: 'lib/api-client',
+  output: 'src/lib/api-client',
   plugins: [
     { name: '@hey-api/schemas' },
     { name: '@hey-api/sdk', auth: true },
