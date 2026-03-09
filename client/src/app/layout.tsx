@@ -5,9 +5,9 @@ import type { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
 
 import { jetbrainsMono } from '@/config/fonts';
-import Providers from '@/config/provider';
+import { Providers } from '@/config/providers';
 import { siteConfig } from '@/config/site';
-import DefaultLayout from '@/layouts/default';
+import { DefaultLayout } from '@/layouts/default';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -37,9 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv" suppressHydrationWarning>
-      <body
-        className={clsx('bg-background min-h-screen font-mono antialiased', jetbrainsMono.variable)}
-      >
+      <body className={clsx('bg-background font-mono antialiased', jetbrainsMono.variable)}>
         <Providers>
           <DefaultLayout>{children}</DefaultLayout>
         </Providers>

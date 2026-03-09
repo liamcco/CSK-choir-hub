@@ -9,7 +9,7 @@ import { ThemeProvider } from 'next-themes';
  *
  * @returns {JSX.Element} The combined providers wrapping the children components.
  */
-export default function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
+export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
     <NextIntlClientProvider>
       <ThemeProvider attribute="class" defaultTheme="light">

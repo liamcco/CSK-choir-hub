@@ -69,7 +69,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       password,
     });
 
-    res.clearCookie('token', COOKIE_OPTIONS);
     res.cookie('token', token, { ...COOKIE_OPTIONS, maxAge: 24 * 60 * 60 * 1000 });
 
     const user = await userService.getUserFromToken(token);
