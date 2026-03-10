@@ -16,7 +16,7 @@ export default defineConfig({
       enums: {
         case: 'SCREAMING_SNAKE_CASE',
         constantsIgnoreNull: false,
-        enabled: true,
+        enabled: false,
         mode: 'typescript-const',
       },
       errors: {
