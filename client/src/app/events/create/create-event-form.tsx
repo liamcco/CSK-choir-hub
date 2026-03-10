@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/ui/utils';
 
 import { FormState, createEventAction } from './actions';
@@ -37,12 +38,16 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
           <form action={formAction} className="space-y-5">
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <FieldLabel htmlFor="name">
+                  Name <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input id="name" name="name" type="text" placeholder="Spring Concert" required />
                 {state?.errors?.name && <FieldError>{state.errors.name[0]}</FieldError>}
               </Field>
               <Field>
-                <FieldLabel htmlFor="type">Type</FieldLabel>
+                <FieldLabel htmlFor="type">
+                  Type <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Select id="type" name="type" required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
@@ -71,7 +76,9 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="dateStart">Start date</FieldLabel>
+                <FieldLabel htmlFor="dateStart">
+                  Start date <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input id="dateStart" name="dateStart" type="datetime-local" required />
                 {state?.errors?.dateStart && <FieldError>{state.errors.dateStart[0]}</FieldError>}
               </Field>
@@ -81,7 +88,9 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
                 {state?.errors?.dateEnd && <FieldError>{state.errors.dateEnd[0]}</FieldError>}
               </Field>
               <Field>
-                <FieldLabel htmlFor="place">Place</FieldLabel>
+                <FieldLabel htmlFor="place">
+                  Place <span className="text-destructive">*</span>
+                </FieldLabel>
                 <Input id="place" name="place" type="text" placeholder="Main Hall" required />
                 {state?.errors?.place && <FieldError>{state.errors.place[0]}</FieldError>}
               </Field>
@@ -112,6 +121,7 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
               {state?.message && <p className="text-destructive text-sm">{state.message}</p>}
               <Field>
                 <Button type="submit" disabled={pending}>
+                  {pending && <Spinner className="mr-2" />}
                   {pending ? 'Creating...' : 'Create event'}
                 </Button>
               </Field>
