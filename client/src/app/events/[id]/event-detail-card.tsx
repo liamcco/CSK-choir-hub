@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { getEventById } from '@/lib/api-client';
+import { formatEventDateRange } from '@/utils/date-utils';
 
 export async function EventDetailCard({ eventId }: { eventId: number }) {
   const res = await getEventById({ path: { eventId } });
@@ -24,8 +25,7 @@ export async function EventDetailCard({ eventId }: { eventId: number }) {
 
   const event = res.data.event;
 
-  const dateStart = new Date(event.dateStart);
-  const dateEnd = new Date(event.dateEnd ?? event.dateStart);
+  const eventDateTime = formatEventDateRange(event.dateStart, event.dateEnd);
 
   return (
     <div className="flex flex-col gap-6">
@@ -36,8 +36,7 @@ export async function EventDetailCard({ eventId }: { eventId: number }) {
           <CardAction>{event.type}</CardAction>
         </CardHeader>
         <CardContent>
-          <p>{dateStart.toLocaleDateString()}</p>
-          <p>{dateEnd.toLocaleDateString()}</p>
+          <p>{eventDateTime}</p>
           <p>{event.description}</p>
         </CardContent>
         <CardFooter className="flex-col gap-2">
