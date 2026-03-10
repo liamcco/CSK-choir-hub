@@ -6,8 +6,6 @@ export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,
   baseUrl: process.env.API_BASE_URL,
   auth: async (auth: Auth) => {
-    console.log('Security check:', auth);
-
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 

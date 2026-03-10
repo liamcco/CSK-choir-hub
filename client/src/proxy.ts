@@ -25,29 +25,6 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const isAdminSection = pathname.startsWith('/admin');
-
-  // Admin-only guard: verify user groups via authenticate endpoint
-  if (isAdminSection) {
-    try {
-      const res = await authenticate();
-
-      const groups: { name: string }[] = res.data?.user?.groups ?? [];
-      const isAdmin = groups.some((g) => g.name === 'Admins');
-
-      if (!isAdmin) {
-        return NextResponse.redirect(new URL('/', req.url));
-      }
-    } catch {
-      const loginUrl = new URL('/login', req.url);
-
-      loginUrl.searchParams.set('next', pathname + search);
-
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  // Authenticated (and admin if needed)
   return NextResponse.next();
 }
 
