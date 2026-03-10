@@ -25,7 +25,7 @@ paths:
         - events
       summary: Create event
       description: Creates a new event (Admins only).
-      operationId: addEvent
+      operationId: createEvent
       requestBody:
         description: Event data
         required: true
