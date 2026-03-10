@@ -8,12 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/ui/utils';
 
 import { FormState, createEventAction } from './actions';
-
-const selectClassName =
-  'h-8 w-full rounded-none border border-input bg-transparent px-2.5 py-1 text-xs outline-none';
 
 const eventTypes = ['REHEARSAL', 'CONCERT', 'GIG', 'PARTY', 'MEETING', 'OTHER'] as const;
 
@@ -39,14 +43,18 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
               </Field>
               <Field>
                 <FieldLabel htmlFor="type">Type</FieldLabel>
-                <select id="type" name="type" className={selectClassName} required>
-                  <option value="">Select type</option>
-                  {eventTypes.map((eventType) => (
-                    <option key={eventType} value={eventType}>
-                      {eventType}
-                    </option>
-                  ))}
-                </select>
+                <Select id="type" name="type" required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eventTypes.map((eventType) => (
+                      <SelectItem key={eventType} value={eventType}>
+                        {eventType}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {state?.errors?.type && <FieldError>{state.errors.type[0]}</FieldError>}
               </Field>
               <Field>
@@ -79,7 +87,7 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
               </Field>
               <Field orientation="horizontal">
                 <FieldLabel htmlFor="requiresAttendance">Requires attendance</FieldLabel>
-                <input
+                <Input
                   id="requiresAttendance"
                   type="checkbox"
                   name="requiresAttendance"
@@ -88,7 +96,7 @@ export function CreateEventForm({ className, ...props }: React.ComponentProps<'d
               </Field>
               <Field orientation="horizontal">
                 <FieldLabel htmlFor="requiresRegistration">Requires registration</FieldLabel>
-                <input
+                <Input
                   id="requiresRegistration"
                   type="checkbox"
                   name="requiresRegistration"
