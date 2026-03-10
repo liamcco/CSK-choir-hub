@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { cn } from '@/lib/ui/utils';
+import { cn } from '@/utils/ui/utils';
 
 import { FormState, createEventAction } from './actions';
 
