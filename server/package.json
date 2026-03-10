@@ -8,9 +8,10 @@
     "dev": "nodemon",
     "openapi-ts": "openapi-ts",
     "build": "tsc && tsc-alias",
-    "setup-db": "ts-node src/scripts/setup-database.ts",
-    "type-check": "tsc --noEmit",
-    "test": "jest"
+    "generate-prisma-client": "npx prisma generate",
+    "run-db": "docker-compose up -d",
+    "migrate-db": "prisma migrate dev --name init",
+    "seed-db": "prisma db seed"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
