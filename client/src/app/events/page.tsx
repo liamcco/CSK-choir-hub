@@ -1,3 +1,10 @@
+import { EventsList } from './events-list';
+
 export default function EventsPage() {
-  return <h1>Events</h1>;
+  return (
+    <div className="mx-auto w-full max-w-xl space-y-4 px-4 py-10">
+      <h1 className="text-sm font-medium">Events</h1>
+      <EventsList />
+    </div>
+  );
 }
