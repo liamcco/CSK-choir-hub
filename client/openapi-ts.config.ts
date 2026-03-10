@@ -43,7 +43,7 @@ export default defineConfig({
     {
       name: '@hey-api/client-next',
       throwOnError: false,
-      runtimeConfigPath: '../../config/hey-api.ts',
+      runtimeConfigPath: '../../config/hey-api',
     },
     {
       name: 'zod',
