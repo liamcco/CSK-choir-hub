@@ -21,8 +21,6 @@ security:
 # Paths grouped by feature area
 paths:
   # Auth
-  /auth/register:
-    $ref: '../routes/auth/auth.yaml#/paths/~1auth~1register'
   /auth/login:
     $ref: '../routes/auth/auth.yaml#/paths/~1auth~1login'
   /auth/authenticate:
@@ -170,8 +168,8 @@ components:
 
   # Common responses
   responses:
-    DefaultError:
-      $ref: './components.yaml#/responses/DefaultError'
+    ErrorResponse:
+      $ref: './components.yaml#/responses/ErrorResponse'
 
   securitySchemes:
     authCookie:

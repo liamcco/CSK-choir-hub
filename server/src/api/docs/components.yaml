@@ -484,7 +484,7 @@ requestBodies:
           $ref: '#/schemas/MakeRegistrationInput'
 
 responses:
-  DefaultError:
+  ErrorResponse:
     description: Unexpected error
     content:
       application/json:

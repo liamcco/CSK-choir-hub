@@ -1,24 +1,5 @@
 paths:
   security: []
-  /auth/register:
-    post:
-      tags:
-        - auth
-      summary: Register a new user
-      operationId: registerUser
-      requestBody:
-        $ref: '../../docs/openapi.yaml#/components/requestBodies/RegisterUser'
-      responses:
-        '201':
-          description: User registered
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    $ref: '../../docs/openapi.yaml#/components/schemas/User'
-
   /auth/login:
     post:
       tags:
@@ -37,6 +18,8 @@ paths:
                 properties:
                   user:
                     $ref: '../../docs/openapi.yaml#/components/schemas/User'
+        '400':
+          $ref: '../../docs/openapi.yaml#/components/responses/ErrorResponse'
 
   /auth/authenticate:
     security:

@@ -45,6 +45,13 @@ export default defineConfig({
       throwOnError: false,
       runtimeConfigPath: '../../config/hey-api.ts',
     },
-    'zod',
+    {
+      name: 'zod',
+      definitions: false,
+      requests: false,
+      responses: false,
+      metadata: false,
+      webhooks: true,
+    },
   ],
 });
