@@ -1,3 +1,14 @@
-export default function EventDetailPage() {
-  return <h1>Event Detail</h1>;
+import { EventDetailCard } from './event-detail-card';
+
+export default async function EventDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const eventId = Number.parseInt(params.id, 10);
+
+  return (
+    <div className="flex h-full w-full items-center justify-center px-8 sm:px-6">
+      <div className="w-full max-w-sm">
+        <EventDetailCard eventId={eventId} />
+      </div>
+    </div>
+  );
 }
