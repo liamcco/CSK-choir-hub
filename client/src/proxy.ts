@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { authenticate } from './lib/api-client';
-
 export async function proxy(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 

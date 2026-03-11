@@ -8,7 +8,6 @@ export const createClientConfig: CreateClientConfig = (config) => ({
   auth: async (auth: Auth) => {
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
-
     return token;
   },
 });
