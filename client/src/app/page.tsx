@@ -28,6 +28,12 @@ export default function IndexPage() {
           <Link href="/events/1" className="text-lg font-medium text-violet-500 hover:underline">
             <Button>{'Visa Nästa Event'}</Button>
           </Link>
+          <Link
+            href="/events/create"
+            className="text-lg font-medium text-violet-500 hover:underline"
+          >
+            <Button>{'Skapa Event'}</Button>
+          </Link>
         </div>
       </section>
     </>
