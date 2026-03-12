@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from 'next-themes';
+
+import { ThemeProvider } from '@/components/theme-provider';
 
 /**
  * A wrapper component that provides authentication, theming, and UI context to its children.
@@ -12,7 +13,12 @@ import { ThemeProvider } from 'next-themes';
 export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
     <NextIntlClientProvider>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem={false}
+        disableTransitionOnChange
+      >
         {children}
       </ThemeProvider>
     </NextIntlClientProvider>
