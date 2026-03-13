@@ -13,7 +13,7 @@ export async function create(data: Prisma.TagCreateInput) {
  * Delete a tag by its ID.
  * @param id Tag ID
  */
-export async function deleteById(tagId: number) {
+export async function deleteById(tagId: string) {
   return prisma.tag.delete({ where: { id: tagId } });
 }
 
@@ -28,7 +28,7 @@ export async function findAll() {
  * Find a tag by its ID.
  * @param id Tag ID
  */
-export async function findById(tagId: number) {
+export async function findById(tagId: string) {
   return prisma.tag.findUnique({ where: { id: tagId } });
 }
 
@@ -37,7 +37,7 @@ export async function findById(tagId: number) {
  * @param id Tag ID
  * @param data Tag update data (name, etc.)
  */
-export async function update(tagId: number, data: Prisma.TagUpdateInput) {
+export async function update(tagId: string, data: Prisma.TagUpdateInput) {
   return prisma.tag.update({ where: { id: tagId }, data });
 }
 
@@ -46,7 +46,7 @@ export async function update(tagId: number, data: Prisma.TagUpdateInput) {
  * @param tagId Tag ID
  * @param songId Song ID
  */
-export async function assignToSong(tagId: number, songId: number) {
+export async function assignToSong(tagId: string, songId: string) {
   return prisma.tag.update({
     where: { id: tagId },
     data: {
@@ -62,7 +62,7 @@ export async function assignToSong(tagId: number, songId: number) {
  * @param tagId Tag ID
  * @param songId Song ID
  */
-export async function removeFromSong(tagId: number, songId: number) {
+export async function removeFromSong(tagId: string, songId: string) {
   return prisma.tag.update({
     where: { id: tagId },
     data: {

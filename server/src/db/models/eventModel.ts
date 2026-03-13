@@ -27,7 +27,7 @@ export async function findAll() {
  * Find an event by its ID.
  * @param eventId - The ID of the event.
  */
-export async function findById(eventId: number) {
+export async function findById(eventId: string) {
   return await prisma.event.findUnique({
     where: { id: eventId },
   });
@@ -38,7 +38,7 @@ export async function findById(eventId: number) {
  * @param eventId - The ID of the event.
  * @param updateData - The data to update.
  */
-export async function update(eventId: number, updateData: Prisma.EventUpdateInput) {
+export async function update(eventId: string, updateData: Prisma.EventUpdateInput) {
   return await prisma.event.update({
     where: { id: eventId },
     data: updateData,
@@ -49,7 +49,7 @@ export async function update(eventId: number, updateData: Prisma.EventUpdateInpu
  * Delete an event by its ID.
  * @param eventId - The ID of the event.
  */
-export async function deleteById(eventId: number) {
+export async function deleteById(eventId: string) {
   return await prisma.event.delete({ where: { id: eventId } });
 }
 
@@ -71,15 +71,14 @@ export async function listEvents(filters?: { type?: EventType }) {
  * List attendees for an event.
  * @param eventId - The ID of the event.
  */
-export async function listAttendees(eventId: number) {
+export async function listAttendees(eventId: string) {
   return await prisma.eventAttendance.findMany({
     where: { eventId },
     include: {
       user: {
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
+          name: true,
         },
       },
     },
@@ -90,15 +89,14 @@ export async function listAttendees(eventId: number) {
  * List registrations for an event.
  * @param eventId - The ID of the event.
  */
-export async function listRegistrations(eventId: number) {
+export async function listRegistrations(eventId: string) {
   return await prisma.eventRegistration.findMany({
     where: { eventId },
     include: {
       user: {
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
+          name: true,
         },
       },
     },
@@ -109,7 +107,7 @@ export async function listRegistrations(eventId: number) {
  * Find events by user (events a user is attending or registered for).
  * @param userId - The ID of the user.
  */
-export async function findEventsByUser(userId: number) {
+export async function findEventsByUser(userId: string) {
   // Events attended by user
   const attended = await prisma.eventAttendance.findMany({
     where: { userId },
@@ -135,8 +133,8 @@ export async function findEventsByUser(userId: number) {
  * @param attending - Whether the user is attending or not.
  */
 export async function updateUserAttendance(
-  eventId: number,
-  userId: number,
+  eventId: string,
+  userId: string,
   status: AttendanceStatus,
 ) {
   // Add or update attendance record
@@ -151,7 +149,7 @@ export async function updateUserAttendance(
  * @param eventId - The ID of the event.
  * @param userId - The ID of the user.
  */
-export async function removeUserAttendance(eventId: number, userId: number) {
+export async function removeUserAttendance(eventId: string, userId: string) {
   return await prisma.eventAttendance.deleteMany({
     where: { eventId, userId },
   });
@@ -162,7 +160,7 @@ export async function removeUserAttendance(eventId: number, userId: number) {
  * @param eventId - The ID of the event.
  * @param userId - The ID of the user.
  */
-export async function registerUser(eventId: number, userId: number) {
+export async function registerUser(eventId: string, userId: string) {
   return await prisma.eventRegistration.create({
     data: { eventId, userId },
   });
@@ -173,7 +171,7 @@ export async function registerUser(eventId: number, userId: number) {
  * @param eventId - The ID of the event.
  * @param userId - The ID of the user.
  */
-export async function unregisterUser(eventId: number, userId: number) {
+export async function unregisterUser(eventId: string, userId: string) {
   return await prisma.eventRegistration.deleteMany({
     where: { eventId, userId },
   });

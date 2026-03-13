@@ -1,4 +1,3 @@
-export * as authService from './authService';
 export * as bookService from './bookService';
 export * as eventService from './eventService';
 export * as groupService from './groupService';
@@ -6,4 +5,3 @@ export * as healthService from './healthService';
 export * as roleService from './roleService';
 export * as songService from './songService';
 export * as tagService from './tagService';
-export * as usersService from './userService';

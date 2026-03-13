@@ -1,21 +1,5 @@
 import { prisma } from '@/db';
 import type { Choir, User, Voice } from '@/prisma/generated/client';
-import { type RegisterInput } from '@/services/userService';
-
-// Creates a new user with the provided data.
-export const createUser = async (userData: RegisterInput) => {
-  const { email, password, username, firstName, lastName } = userData;
-
-  return prisma.user.create({
-    data: {
-      email,
-      passwordHash: password,
-      username,
-      firstName,
-      lastName,
-    },
-  });
-};
 
 // Finds a user by their email address.
 export const findByEmail = async (email: string) => {
@@ -38,12 +22,12 @@ type IncludeParams = {
   roles?: boolean;
   groups?: boolean;
 };
-export const findById = async (id: number, param?: IncludeParams) => {
+export const findById = async (id: string, param?: IncludeParams) => {
   return prisma.user.findUnique({ where: { id }, include: { ...param } });
 };
 
 // Updates user fields by ID. Provide an object with fields to update.
-export const updateUser = async (id: number, updateData: Partial<User>) => {
+export const updateUser = async (id: string, updateData: Partial<User>) => {
   return prisma.user.update({
     where: { id },
     data: updateData,
@@ -51,7 +35,7 @@ export const updateUser = async (id: number, updateData: Partial<User>) => {
 };
 
 // Deletes a user by ID.
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: string) => {
   return prisma.user.delete({ where: { id } });
 };
 
@@ -61,7 +45,7 @@ export const getUsers = async (
     choir: Choir;
     voice: Voice;
     roleId: number;
-    groupId: number;
+    groupId: string;
   }> = {},
   include?: IncludeParams,
 ) => {
@@ -81,7 +65,7 @@ export const getUsers = async (
 };
 
 // Finds all users assigned a specific role.
-export const findByRole = async (roleId: number) => {
+export const findByRole = async (roleId: string) => {
   return prisma.user.findMany({
     where: {
       roles: { some: { id: roleId } },
@@ -89,14 +73,14 @@ export const findByRole = async (roleId: number) => {
   });
 };
 
-export const findRolesByUser = async (userId: number) => {
+export const findRolesByUser = async (userId: string) => {
   return prisma.role.findMany({
     where: { user: { id: userId } },
   });
 };
 
 // Finds all users with a specific group.
-export const findByGroup = async (groupId: number) => {
+export const findByGroup = async (groupId: string) => {
   return prisma.user.findMany({
     where: {
       groups: { some: { id: groupId } },
@@ -109,7 +93,7 @@ export const findByGroup = async (groupId: number) => {
  * @param userId - The ID of the user.
  * @returns An array of groups the user belongs to.
  */
-export async function findGroupsByUser(userId: number) {
+export async function findGroupsByUser(userId: string) {
   return await prisma.group.findMany({
     where: { members: { some: { id: userId } } },
     include: { members: true },

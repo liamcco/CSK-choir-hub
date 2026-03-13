@@ -5,265 +5,264 @@ import { type PrismaClient } from '@/prisma/generated/client';
 export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
   const alice = await prisma.user.create({
     data: {
+      id: '1',
       email: 'alice@example.com',
       username: 'alice',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Alice',
-      lastName: 'Alto',
+      name: 'Alice Alto',
       dietaryPreferences: 'Vegetarian',
     },
   });
 
   const bob = await prisma.user.create({
     data: {
+      id: '2',
       email: 'bob@example.com',
       username: 'bob',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Bob',
-      lastName: 'Bass',
+      name: 'Bob Bass',
     },
   });
 
   const charles = await prisma.user.create({
     data: {
+      id: '3',
       email: 'charles@example.com',
       username: 'charles',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Charles',
-      lastName: 'Capo',
+      name: 'Charles Capo',
     },
   });
 
   const diana = await prisma.user.create({
     data: {
+      id: '4',
       email: 'diana@example.com',
       username: 'diana',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Diana',
-      lastName: 'Diva',
+      name: 'Diana Diva',
       dietaryPreferences: 'Vegan',
     },
   });
 
   const evan = await prisma.user.create({
     data: {
+      id: '5',
       email: 'evan@example.com',
       username: 'evan',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Evan',
-      lastName: 'Echo',
+      name: 'Evan Echo',
     },
   });
 
   const fred = await prisma.user.create({
     data: {
+      id: '6',
       email: 'fred@example.com',
       username: 'fred',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Fred',
-      lastName: 'Fermata',
+      name: 'Fred Fermata',
     },
   });
 
   const george = await prisma.user.create({
     data: {
+      id: '7',
       email: 'george@example.com',
       username: 'george',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'George',
-      lastName: 'Guitar',
+      name: 'George Guitar',
     },
   });
 
   const helen = await prisma.user.create({
     data: {
+      id: '8',
       email: 'helen@example.com',
       username: 'helen',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Helen',
-      lastName: 'Harmony',
+      name: 'Helen Harmony',
       dietaryPreferences: 'Gluten-Free',
     },
   });
 
   const liam = await prisma.user.create({
     data: {
+      id: '9',
       email: 'liam@example.com',
       username: 'liam',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Liam',
-      lastName: 'Lyric',
+      name: 'Liam Lyric',
     },
   });
 
   const lucas = await prisma.user.create({
     data: {
+      id: '10',
       email: 'lucas@example.com',
       username: 'lucas',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Lucas',
-      lastName: 'Lyric',
-      webRole: 'ADMIN',
+      name: 'Lucas Lyric',
     },
   });
 
   const isak = await prisma.user.create({
     data: {
+      id: '11',
       email: 'isak@example.com',
       username: 'isak',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Isak',
-      lastName: 'Inspiration',
+      name: 'Isak Inspiration',
     },
   });
 
   const elin = await prisma.user.create({
     data: {
+      id: '12',
       email: 'elin@example.com',
       username: 'elin',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Elin',
-      lastName: 'Elegance',
+      name: 'Elin Elegance',
     },
   });
 
   const ellen = await prisma.user.create({
     data: {
+      id: '13',
       email: 'ellen@example.com',
       username: 'ellen',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Ellen',
-      lastName: 'Elegance',
+      name: 'Ellen Elegance',
     },
   });
 
   const elinor = await prisma.user.create({
     data: {
+      id: '14',
       email: 'elinor@example.com',
       username: 'elinor',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Elinor',
-      lastName: 'Elegance',
+      name: 'Elinor Elegance',
     },
   });
 
   const ingrid = await prisma.user.create({
     data: {
+      id: '15',
       email: 'ingrid@example.com',
       username: 'ingrid',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Ingrid',
-      lastName: 'Inspiration',
+      name: 'Ingrid Inspiration',
     },
   });
 
   const vera = await prisma.user.create({
     data: {
+      id: '16',
       email: 'vera@example.com',
       username: 'vera',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Vera',
-      lastName: 'Vocal',
+      name: 'Vera Vocal',
     },
   });
 
   const hilding = await prisma.user.create({
     data: {
+      id: '17',
       email: 'hilding@example.com',
       username: 'hilding',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Hilding',
-      lastName: 'Harmony',
+      name: 'Hilding Harmony',
     },
   });
 
   const felix = await prisma.user.create({
     data: {
+      id: '18',
       email: 'felix@example.com',
       username: 'felix',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Felix',
-      lastName: 'Forte',
+      name: 'Felix Forte',
     },
   });
 
   const linn = await prisma.user.create({
     data: {
+      id: '19',
       email: 'linn@example.com',
       username: 'linn',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Linn',
-      lastName: 'Lyric',
+      name: 'Linn Lyric',
     },
   });
 
   const thore = await prisma.user.create({
     data: {
+      id: '20',
       email: 'thore@example.com',
       username: 'thore',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Thore',
-      lastName: 'Tenor',
+      name: 'Thore Tenor',
     },
   });
 
   const rebekka = await prisma.user.create({
     data: {
+      id: '21',
       email: 'rebekka@example.com',
       username: 'rebekka',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Rebekka',
-      lastName: 'Rhapsody',
+      name: 'Rebekka Rhapsody',
     },
   });
 
   const robert = await prisma.user.create({
     data: {
+      id: '22',
       email: 'robert@example.com',
       username: 'robert',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Robert',
-      lastName: 'Rhapsody',
+      name: 'Robert Rhapsody',
     },
   });
 
   const julia = await prisma.user.create({
     data: {
+      id: '23',
       email: 'julia@example.com',
       username: 'julia',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Julia',
-      lastName: 'Jazz',
+      name: 'Julia Jazz',
     },
   });
 
   const mathias = await prisma.user.create({
     data: {
+      id: '24',
       email: 'mathias@example.com',
       username: 'mathias',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Mathias',
-      lastName: 'Melody',
+      name: 'Mathias Melody',
     },
   });
 
   const elisabeth = await prisma.user.create({
     data: {
+      id: '25',
       email: 'elisabeth@example.com',
       username: 'elisabeth',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Elisabeth',
-      lastName: 'Elegance',
+      name: 'Elisabeth Elegance',
     },
   });
 
   const maria = await prisma.user.create({
     data: {
+      id: '26',
       email: 'maria@example.com',
       username: 'maria',
       passwordHash: await bcrypt.hash('password', 10),
-      firstName: 'Maria',
-      lastName: 'Melody',
+      name: 'Maria Melody',
     },
   });
 
@@ -298,33 +297,33 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
 }
 
 export interface Users {
-  alice: { id: number };
-  bob: { id: number };
-  charles: { id: number };
-  diana: { id: number };
-  evan: { id: number };
-  fred: { id: number };
-  george: { id: number };
-  helen: { id: number };
+  alice: { id: string };
+  bob: { id: string };
+  charles: { id: string };
+  diana: { id: string };
+  evan: { id: string };
+  fred: { id: string };
+  george: { id: string };
+  helen: { id: string };
 
-  liam: { id: number };
-  lucas: { id: number };
-  isak: { id: number };
-  elin: { id: number };
-  ellen: { id: number };
-  elinor: { id: number };
-  vera: { id: number };
-  ingrid: { id: number };
+  liam: { id: string };
+  lucas: { id: string };
+  isak: { id: string };
+  elin: { id: string };
+  ellen: { id: string };
+  elinor: { id: string };
+  vera: { id: string };
+  ingrid: { id: string };
 
-  hilding: { id: number };
-  felix: { id: number };
-  linn: { id: number };
-  thore: { id: number };
-  rebekka: { id: number };
-  robert: { id: number };
-  julia: { id: number };
+  hilding: { id: string };
+  felix: { id: string };
+  linn: { id: string };
+  thore: { id: string };
+  rebekka: { id: string };
+  robert: { id: string };
+  julia: { id: string };
 
-  mathias: { id: number };
-  elisabeth: { id: number };
-  maria: { id: number };
+  mathias: { id: string };
+  elisabeth: { id: string };
+  maria: { id: string };
 }

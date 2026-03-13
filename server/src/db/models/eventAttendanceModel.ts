@@ -7,8 +7,8 @@ import { type AttendanceStatus } from '@/prisma/generated/client';
  * @param userId - The ID of the user.
  */
 export async function updateUserEventAttendanceStatus(
-  userId: number,
-  eventId: number,
+  userId: string,
+  eventId: string,
   status: AttendanceStatus,
 ) {
   return await prisma.eventAttendance.create({
@@ -25,7 +25,7 @@ export async function updateUserEventAttendanceStatus(
  * @param userId - The ID of the user.
  * @param eventId - The ID of the event.
  */
-export async function removeUserEventAttendance(userId: number, eventId: number) {
+export async function removeUserEventAttendance(userId: string, eventId: string) {
   return await prisma.eventAttendance.deleteMany({
     where: { userId: userId, eventId: eventId },
   });

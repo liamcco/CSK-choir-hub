@@ -6,13 +6,13 @@ import { type Group, type Role } from '@/prisma/generated/client';
 import { ForbiddenError, UnauthorizedError } from '@/utils';
 
 interface JwtPayload {
-  userId: number;
+  userId: string;
 }
 
 declare module 'express-serve-static-core' {
   interface Request {
     user?: {
-      id: number;
+      id: string;
       roles: string[];
       groups: string[];
     };
@@ -67,11 +67,9 @@ export const requireAuth = (rules?: AccessRules) => {
 
       // Self check
       if (rules?.allowSelf && rules.paramKey) {
-        const targetId = parseInt(req.params[rules.paramKey] ?? '', 10);
+        const targetId = req.params[rules.paramKey];
 
-        if (req.user.id !== targetId) {
-          return next(new ForbiddenError('Forbidden: Not your resource.'));
-        }
+        if (req.user.id !== targetId) throw new ForbiddenError('Forbidden: Not your resource.');
       }
 
       return next();

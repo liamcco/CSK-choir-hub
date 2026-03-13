@@ -8,8 +8,8 @@ import { prisma } from '@/db';
  * @param dietaryPreferences - Optional dietary preferences from the user.
  */
 export async function addRegistration(
-  eventId: number,
-  userId: number,
+  eventId: string,
+  userId: string,
   comments?: string,
   dietaryPreferences?: string,
 ) {
@@ -23,7 +23,7 @@ export async function addRegistration(
  * @param userId - The ID of the user.
  * @param eventId - The ID of the event.
  */
-export async function removeUserEventRegistration(userId: number, eventId: number) {
+export async function removeUserEventRegistration(userId: string, eventId: string) {
   return await prisma.eventRegistration.deleteMany({
     where: { userId: userId, eventId: eventId },
   });
@@ -33,7 +33,7 @@ export async function removeUserEventRegistration(userId: number, eventId: numbe
  * List registrations for an event.
  * @param eventId - The ID of the event.
  */
-export async function listRegistrations(eventId: number) {
+export async function listRegistrations(eventId: string) {
   return await prisma.eventRegistration.findMany({
     where: { eventId },
     include: { user: true },

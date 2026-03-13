@@ -132,8 +132,8 @@ schemas:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
+        format: uuid
       name:
         type: string
         example: Tenor
@@ -151,23 +151,19 @@ schemas:
           members:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
           roles:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
           parents:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
           children:
             type: array
             items:
-              type: integer
-              format: int64
+              type: string
         required:
           - members
           - roles
@@ -381,87 +377,7 @@ schemas:
     required:
       - message
 
-  RegisterUserInput:
-    type: object
-    properties:
-      username:
-        type: string
-        example: concertmasterkkb1
-      firstName:
-        type: string
-        example: Liam
-      lastName:
-        type: string
-        example: Cotton
-      email:
-        type: string
-        example: liam@cotton.com
-      password:
-        type: string
-        example: 'jagkansjunga'
-    required:
-      - firstName
-      - lastName
-      - email
-      - username
-      - password
-
-  LoginUserInput:
-    description: User credentials
-    type: object
-    properties:
-      username:
-        type: string
-        example: concertmasterkkb1
-      password:
-        type: string
-        example: 'jagkansjunga'
-    required:
-      - username
-      - password
-
-  UpdateUserInput:
-    type: object
-    properties:
-      username:
-        type: string
-        example: concertmasterkkb1
-      firstName:
-        type: string
-        example: Liam
-      lastName:
-        type: string
-        example: Cotton
-      email:
-        type: string
-        format: email
-        example: liam@cotton.com
-      dietaryPreferences:
-        type: string
-        example: Vegetarian
-
 requestBodies:
-  RegisterUser:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/schemas/RegisterUserInput'
-
-  LoginUser:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/schemas/LoginUserInput'
-
-  UpdateUser:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/schemas/UpdateUserInput'
-
   CreateEvent:
     required: true
     content:

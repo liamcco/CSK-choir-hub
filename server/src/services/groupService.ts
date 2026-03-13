@@ -11,22 +11,10 @@ export async function getAllGroups() {
 }
 
 /**
- * Get groups by type.
- * @param type - The type of groups to retrieve.
- * @returns Groups matching the specified type.
- * @throws NotFoundError if no groups are found for the specified type.
- */
-export async function getGroupsByType(type: GroupType) {
-  const groups = await groupModel.findBy({ type });
-
-  return groups;
-}
-
-/**
  * Delete a group by ID.
  * @param groupId - The ID of the group to delete.
  */
-export async function deleteGroup(groupId: number) {
+export async function deleteGroup(groupId: string) {
   await groupModel.deleteById(groupId);
 }
 
@@ -46,7 +34,7 @@ export async function createGroup(data: { name: string; type: GroupType; descrip
  * @returns The updated group.
  */
 export async function updateGroup(
-  groupId: number,
+  groupId: string,
   data: { name?: string; type?: GroupType; description?: string },
 ) {
   return await groupModel.update(groupId, data);
@@ -58,7 +46,7 @@ export async function updateGroup(
  * @param subgroupId - The ID of the subgroup to add.
  * @returns {Promise<void>}
  */
-export async function addGroup(parentGroupId: number, subgroupId: number) {
+export async function addGroup(parentGroupId: string, subgroupId: string) {
   const parentGroup = await groupModel.findById(parentGroupId);
 
   if (!parentGroup) throw new NotFoundError('Parent group not found');
@@ -76,7 +64,7 @@ export async function addGroup(parentGroupId: number, subgroupId: number) {
  * @param subgroupId - The ID of the subgroup to remove.
  * @returns {Promise<void>}
  */
-export async function removeGroup(parentGroupId: number, subgroupId: number) {
+export async function removeGroup(parentGroupId: string, subgroupId: string) {
   const parentGroup = await groupModel.findById(parentGroupId);
 
   if (!parentGroup) throw new NotFoundError('Parent group not found');
@@ -90,21 +78,21 @@ export async function removeGroup(parentGroupId: number, subgroupId: number) {
 
 /**
  * Add a group to a user.
- * @param {number} userId - The user ID.
- * @param {number} groupId - The group ID.
+ * @param {string} userId - The user ID.
+ * @param {string} groupId - The group ID.
  * @returns {Promise<void>}
  */
-export async function addUser(userId: number, groupId: number): Promise<void> {
+export async function addUser(userId: string, groupId: string): Promise<void> {
   await groupModel.addUser(userId, groupId);
 }
 
 /**
  * Remove a group from a user.
- * @param {number} userId - The user ID.
- * @param {number} groupId - The group ID.
+ * @param {string} userId - The user ID.
+ * @param {string} groupId - The group ID.
  * @returns {Promise<void>}
  */
-export async function removeUser(userId: number, groupId: number): Promise<void> {
+export async function removeUser(userId: string, groupId: string): Promise<void> {
   await groupModel.removeUser(userId, groupId);
 }
 
@@ -114,7 +102,7 @@ export async function removeUser(userId: number, groupId: number): Promise<void>
  * @param roleId - The ID of the role to add.
  * @returns {Promise<void>}
  */
-export async function addRole(groupId: number, roleId: number) {
+export async function addRole(groupId: string, roleId: string) {
   const group = await groupModel.findById(groupId);
 
   if (!group) throw new NotFoundError('Group not found');
@@ -132,7 +120,7 @@ export async function addRole(groupId: number, roleId: number) {
  * @param roleId - The ID of the role to remove.
  * @returns {Promise<void>}
  */
-export async function removeRole(groupId: number, roleId: number) {
+export async function removeRole(groupId: string, roleId: string) {
   const group = await groupModel.findById(groupId);
 
   if (!group) throw new NotFoundError('Group not found');

@@ -6,6 +6,6 @@ import { requireAuth } from '@/middleware';
 const router = express.Router();
 
 router.post('/', requireAuth({ groups: ['Admins'] }), addGroupToGroup);
-router.delete('/:groupId', requireAuth({ groups: ['Admins'] }), removeGroupFromGroup);
+router.delete('/:subgroupId', requireAuth({ groups: ['Admins'] }), removeGroupFromGroup);
 
 export default router;

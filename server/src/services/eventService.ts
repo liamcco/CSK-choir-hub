@@ -14,23 +14,21 @@ export async function getAllEvents() {
  * @param eventId - The ID of the event to retrieve.
  * @returns The event with the specified ID, or null if not found.
  */
-export async function getEvent(eventId: number) {
+export async function getEvent(eventId: string) {
   const event = await eventModel.findById(eventId);
 
   // Fetch names of users attending the event
   if (!event) return null;
 
   const attendees = (await eventModel.listAttendees(eventId)).map((a) => ({
-    userId: a.user.id,
-    firstName: a.user.firstName,
-    lastName: a.user.lastName,
+    userId: a.userId,
+    name: a.user.name,
     status: a.status,
   }));
 
   const registrations = (await eventModel.listRegistrations(eventId)).map((r) => ({
-    userId: r.user.id,
-    firstName: r.user.firstName,
-    lastName: r.user.lastName,
+    userId: r.userId,
+    name: r.user.name,
     comments: r.comments,
     dietaryPreferences: r.dietaryPreferences,
   }));
@@ -48,7 +46,7 @@ export async function getEvent(eventId: number) {
  * Delete an event by ID.
  * @param eventId - The ID of the event to delete.
  */
-export async function deleteEvent(eventId: number) {
+export async function deleteEvent(eventId: string) {
   await eventModel.deleteById(eventId);
 }
 
@@ -74,7 +72,7 @@ export async function createEvent(eventData: {
  * @returns The updated event.
  */
 export async function updateEvent(
-  eventId: number,
+  eventId: string,
   updateData: {
     name?: string;
     description?: string;
@@ -94,8 +92,8 @@ export async function updateEvent(
  * @returns The updated attendance record.
  */
 export async function updateUserAttendance(
-  eventId: number,
-  userId: number,
+  eventId: string,
+  userId: string,
   status?: AttendanceStatus,
 ) {
   if (status) {
@@ -111,7 +109,7 @@ export async function updateUserAttendance(
  * @param userId - The ID of the user.
  * @returns {Promise<void>}
  */
-export async function registerUser(eventId: number, userId: number) {
+export async function registerUser(eventId: string, userId: string) {
   const user = await userModel.findById(userId);
 
   if (!user) throw new NotFoundError('User not Found');
@@ -129,6 +127,6 @@ export async function registerUser(eventId: number, userId: number) {
  * @param userId - The ID of the user.
  * @returns {Promise<void>}
  */
-export async function unregisterUser(eventId: number, userId: number) {
+export async function unregisterUser(eventId: string, userId: string) {
   return await eventModel.unregisterUser(eventId, userId);
 }

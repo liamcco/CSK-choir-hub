@@ -1,14 +1,15 @@
 import { prisma } from '@/db';
 import { type GroupType } from '@/prisma/generated/client';
+import { type Prisma } from '@/prisma/generated/client';
 
 /**
  * Creates a new group with the given data.
  * @param data - The group data to create.
  * @returns The created group.
  */
-export async function create(data: { name: string; type: GroupType; description?: string }) {
+export async function create(data: Prisma.GroupCreateInput) {
   return await prisma.group.create({
-    data,
+    data: data,
   });
 }
 
@@ -17,7 +18,7 @@ export async function create(data: { name: string; type: GroupType; description?
  * @param id - The ID of the group to find.
  * @returns The group if found, otherwise null.
  */
-export async function findById(id: number) {
+export async function findById(id: string) {
   return await prisma.group.findUnique({
     where: { id },
   });
@@ -29,7 +30,7 @@ export async function findById(id: number) {
  * @param data - The data to update.
  * @returns The updated group.
  */
-export async function update(id: number, data: { name?: string; description?: string }) {
+export async function update(id: string, data: { name?: string; description?: string }) {
   return await prisma.group.update({
     where: { id },
     data,
@@ -41,7 +42,7 @@ export async function update(id: number, data: { name?: string; description?: st
  * @param id - The ID of the group to delete.
  * @returns The deleted group.
  */
-export async function deleteById(id: number) {
+export async function deleteById(id: string) {
   return await prisma.group.delete({
     where: { id },
   });
@@ -75,7 +76,7 @@ export async function findBy(filters: { type?: GroupType; name?: string }) {
  * @returns An array of users who are members of the group.
  */
 // TODO - users can be member of several subgroups of the same parent group, so we need to deduplicate the users
-export async function listGroupMembers(groupId: number, visited: Set<number> = new Set()) {
+export async function listGroupMembers(groupId: string, visited: Set<string> = new Set()) {
   if (visited.has(groupId)) return [];
   visited.add(groupId);
 
@@ -89,7 +90,7 @@ export async function listGroupMembers(groupId: number, visited: Set<number> = n
   const members = group.members;
 
   for (const subgroup of group.children) {
-    const subgroupMembers = await listGroupMembers(subgroup.id);
+    const subgroupMembers = await listGroupMembers(subgroup.id, visited);
 
     members.push(...subgroupMembers);
   }
@@ -98,7 +99,7 @@ export async function listGroupMembers(groupId: number, visited: Set<number> = n
 }
 
 // Adds a user to a group (many-to-many relation).
-export const addUser = async (userId: number, groupId: number) => {
+export const addUser = async (userId: string, groupId: string) => {
   return prisma.user.update({
     where: { id: userId },
     data: {
@@ -108,7 +109,7 @@ export const addUser = async (userId: number, groupId: number) => {
 };
 
 // Removes a user from a group (many-to-many relation).
-export const removeUser = async (userId: number, groupId: number) => {
+export const removeUser = async (userId: string, groupId: string) => {
   return prisma.user.update({
     where: { id: userId },
     data: {
@@ -118,7 +119,7 @@ export const removeUser = async (userId: number, groupId: number) => {
 };
 
 // Adds a role to a group (many-to-many relation).
-export const addRole = async (groupId: number, roleId: number) => {
+export const addRole = async (groupId: string, roleId: string) => {
   return prisma.group.update({
     where: { id: groupId },
     data: {
@@ -128,7 +129,7 @@ export const addRole = async (groupId: number, roleId: number) => {
 };
 
 // Removes a role from a group (many-to-many relation).
-export const removeRole = async (roleId: number, groupId: number) => {
+export const removeRole = async (roleId: string, groupId: string) => {
   return prisma.group.update({
     where: { id: groupId },
     data: {
@@ -138,7 +139,7 @@ export const removeRole = async (roleId: number, groupId: number) => {
 };
 
 // Adds a subgroup to a parent group (self-referential many-to-many relation).
-export const addGroup = async (parentGroupId: number, subgroupId: number) => {
+export const addGroup = async (parentGroupId: string, subgroupId: string) => {
   return prisma.group.update({
     where: { id: parentGroupId },
     data: {
@@ -148,7 +149,7 @@ export const addGroup = async (parentGroupId: number, subgroupId: number) => {
 };
 
 // Removes a subgroup from a parent group (self-referential many-to-many relation).
-export const removeGroup = async (parentGroupId: number, subgroupId: number) => {
+export const removeGroup = async (parentGroupId: string, subgroupId: string) => {
   return prisma.group.update({
     where: { id: parentGroupId },
     data: {

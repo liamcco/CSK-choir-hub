@@ -13,7 +13,7 @@ export async function create(data: Prisma.BookCreateInput) {
  * Delete a book by its ID.
  * @param id Book ID
  */
-export async function deleteById(bookId: number) {
+export async function deleteById(bookId: string) {
   return prisma.book.delete({ where: { id: bookId } });
 }
 
@@ -28,7 +28,7 @@ export async function findAll() {
  * Find a book by its ID.
  * @param bookId Book ID
  */
-export async function findById(bookId: number) {
+export async function findById(bookId: string) {
   return prisma.book.findUnique({
     where: { id: bookId },
     include: {
@@ -46,7 +46,7 @@ export async function findById(bookId: number) {
  * @param bookId Book ID
  * @param songId Song ID
  */
-export async function addSong(bookId: number, songId: number) {
+export async function addSong(bookId: string, songId: string) {
   return prisma.book.update({
     where: { id: bookId },
     data: {
@@ -64,7 +64,7 @@ export async function addSong(bookId: number, songId: number) {
  * @param bookId Book ID
  * @param songId Song ID
  */
-export async function removeSong(bookId: number, songId: number) {
+export async function removeSong(bookId: string, songId: string) {
   return prisma.book.update({
     where: { id: bookId },
     data: {

@@ -7,8 +7,8 @@ import { type KnowledgeLevel, type Voice } from '@/prisma/generated/client';
  * @param userId - The ID of the user.
  */
 export async function updateUserSongKnowledgeLevel(
-  userId: number,
-  songId: number,
+  userId: string,
+  songId: string,
   voice: Voice,
   level: KnowledgeLevel,
 ) {
@@ -37,7 +37,7 @@ export async function updateUserSongKnowledgeLevel(
  * @param userId - The ID of the user.
  * @param songId - The ID of the song.
  */
-export async function removeUserSongKnowledgeLevel(userId: number, songId: number, voice: Voice) {
+export async function removeUserSongKnowledgeLevel(userId: string, songId: string, voice: Voice) {
   return await prisma.songKnowledge.deleteMany({
     where: { userId: userId, songId: songId, voice: voice },
   });

@@ -93,7 +93,7 @@ enum GroupType {
 }
 
 model Group {
-  id        String   @id
+  id        String   @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String    @unique
@@ -109,7 +109,7 @@ model Group {
 }
 
 model Role {
-  id        String   @id
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
@@ -131,7 +131,7 @@ enum EventType {
 }
 
 model Event {
-  id        String   @id
+  id        String   @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String
@@ -184,7 +184,7 @@ model EventRegistration {
 }
 
 model Book {
-  id        String   @id
+  id        String   @id @default(uuid())
   title      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -193,7 +193,7 @@ model Book {
 }
 
 model Song {
-  id        String   @id
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String
@@ -211,7 +211,6 @@ model BookSong {
   bookId String
   songId String
 
-  // If you only need a single page number, keep `page` and delete `pageStart/pageEnd`.
   pageStart Int?
   pageEnd   Int?
 
@@ -248,7 +247,7 @@ model SongKnowledge {
 }
 
 model Tag {
-  id    String   @id
+  id    String   @id @default(uuid())
   name  String @unique
   songs Song[]
 

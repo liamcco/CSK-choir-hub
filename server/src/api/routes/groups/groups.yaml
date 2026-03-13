@@ -65,8 +65,8 @@ paths:
         required: true
         description: ID of the group
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     put:
       tags:
         - groups
@@ -112,8 +112,8 @@ paths:
         required: true
         description: ID of the group
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - groups
@@ -128,8 +128,7 @@ paths:
               type: object
               properties:
                 userId:
-                  type: integer
-                  format: int64
+                  type: string
               required:
                 - userId
       responses:
@@ -143,12 +142,11 @@ paths:
       operationId: removeUserFromGroup
       parameters:
         - name: userId
-          in: query
+          in: path
           description: ID of the user to remove
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: User removed
@@ -160,8 +158,8 @@ paths:
         required: true
         description: ID of the group
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - groups
@@ -176,8 +174,7 @@ paths:
               type: object
               properties:
                 roleId:
-                  type: integer
-                  format: int64
+                  type: string
               required:
                 - roleId
       responses:
@@ -195,8 +192,7 @@ paths:
           description: ID of the role to remove
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: Role removed
@@ -208,8 +204,8 @@ paths:
         required: true
         description: ID of the parent group
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - groups
@@ -224,8 +220,7 @@ paths:
               type: object
               properties:
                 subgroupId:
-                  type: integer
-                  format: int64
+                  type: string
               required:
                 - subgroupId
       responses:
@@ -243,8 +238,7 @@ paths:
           description: ID of the subgroup to remove
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "204":
           description: Subgroup removed

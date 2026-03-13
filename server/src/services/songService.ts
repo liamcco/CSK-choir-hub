@@ -21,7 +21,7 @@ export async function createSong(data: { title: string }) {
  * Delete a song by its ID
  * @param songId
  */
-export async function deleteSong(songId: number) {
+export async function deleteSong(songId: string) {
   await songModel.deleteById(songId);
 }
 
@@ -30,7 +30,7 @@ export async function deleteSong(songId: number) {
  * @param songId
  * @returns The song with the given ID
  */
-export async function getSongById(songId: number) {
+export async function getSongById(songId: string) {
   return await songModel.findById(songId);
 }
 
@@ -40,7 +40,7 @@ export async function getSongById(songId: number) {
  * @param tagId - The ID of the tag.
  * @returns The result of the operation.
  */
-export async function addTag(songId: number, tagId: number) {
+export async function addTag(songId: string, tagId: string) {
   return await tagModel.assignToSong(tagId, songId);
 }
 
@@ -50,6 +50,6 @@ export async function addTag(songId: number, tagId: number) {
  * @param tagId - The ID of the tag.
  * @returns The result of the operation.
  */
-export async function removeTag(songId: number, tagId: number) {
+export async function removeTag(songId: string, tagId: string) {
   return await tagModel.removeFromSong(tagId, songId);
 }

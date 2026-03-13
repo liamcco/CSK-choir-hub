@@ -21,7 +21,7 @@ export async function findAll() {
  * Find a song by its unique ID.
  * @param id Song ID
  */
-export async function findById(songId: number) {
+export async function findById(songId: string) {
   return prisma.song.findUnique({ where: { id: songId } });
 }
 
@@ -30,7 +30,7 @@ export async function findById(songId: number) {
  * @param id Song ID
  * @param data Fields to update
  */
-export async function updateSong(songId: number, data: Prisma.SongUpdateInput) {
+export async function updateSong(songId: string, data: Prisma.SongUpdateInput) {
   return prisma.song.update({
     where: { id: songId },
     data,
@@ -41,7 +41,7 @@ export async function updateSong(songId: number, data: Prisma.SongUpdateInput) {
  * Delete a song by its ID.
  * @param id Song ID
  */
-export async function deleteById(songId: number) {
+export async function deleteById(songId: string) {
   return prisma.song.delete({ where: { id: songId } });
 }
 
@@ -49,7 +49,7 @@ export async function deleteById(songId: number) {
  * List songs with optional filters for bookId, voice, and tags.
  * @param filters Optional filter object
  */
-export async function listSongs(filters?: { bookId?: number; tags?: Tag[] }) {
+export async function listSongs(filters?: { bookId?: string; tags?: Tag[] }) {
   const where: Prisma.SongWhereInput = {};
 
   if (filters?.bookId) {
@@ -69,8 +69,8 @@ export async function listSongs(filters?: { bookId?: number; tags?: Tag[] }) {
  * @param knowledgeLevel Level of knowledge (e.g., 'learning', 'known', etc.)
  */
 export async function assignSongToUser(
-  userId: number,
-  songId: number,
+  userId: string,
+  songId: string,
   voice: Voice,
   level: KnowledgeLevel,
 ) {
@@ -92,7 +92,7 @@ export async function assignSongToUser(
  * @param userId User ID
  * @param songId Song ID
  */
-export async function removeSongKnowledge(userId: number, songId: number, voice: Voice) {
+export async function removeSongKnowledge(userId: string, songId: string, voice: Voice) {
   return prisma.songKnowledge.delete({
     where: { userId_songId_voice: { userId, songId, voice } },
   });
@@ -103,7 +103,7 @@ export async function removeSongKnowledge(userId: number, songId: number, voice:
  * @param songId Song ID
  * @param knowledgeLevel Optional knowledge level filter
  */
-export async function listUsersKnowingSong(songId: number, knowledgeLevel?: KnowledgeLevel) {
+export async function listUsersKnowingSong(songId: string, knowledgeLevel?: KnowledgeLevel) {
   return prisma.songKnowledge.findMany({
     where: {
       songId,
@@ -118,7 +118,7 @@ export async function listUsersKnowingSong(songId: number, knowledgeLevel?: Know
  * @param userId User ID
  * @param knowledgeLevel Optional knowledge level filter
  */
-export async function listSongsForUser(userId: number, knowledgeLevel?: KnowledgeLevel) {
+export async function listSongsForUser(userId: string, knowledgeLevel?: KnowledgeLevel) {
   return prisma.songKnowledge.findMany({
     where: {
       userId,
@@ -133,7 +133,7 @@ export async function listSongsForUser(userId: number, knowledgeLevel?: Knowledg
  * @param songId Song ID
  * @param tagId Tag ID
  */
-export async function addTag(songId: number, tagId: number) {
+export async function addTag(songId: string, tagId: string) {
   return prisma.song.update({
     where: { id: songId },
     data: {
@@ -149,7 +149,7 @@ export async function addTag(songId: number, tagId: number) {
  * @param songId Song ID
  * @param tagId Tag ID
  */
-export async function removeTag(songId: number, tagId: number) {
+export async function removeTag(songId: string, tagId: string) {
   return prisma.song.update({
     where: { id: songId },
     data: {

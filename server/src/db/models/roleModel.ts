@@ -1,17 +1,14 @@
 import { prisma } from '@/db';
-import type { Role } from '@/prisma/generated/client';
+import type { Prisma, Role } from '@/prisma/generated/client';
 
 /**
  * Create a new role.
  * @param name Role name
  * @param description Role description (optional)
  */
-export async function create(name: string, description?: string): Promise<Role> {
+export async function create(data: Prisma.RoleCreateInput): Promise<Role> {
   return prisma.role.create({
-    data: {
-      name,
-      description,
-    },
+    data,
   });
 }
 
@@ -19,7 +16,7 @@ export async function create(name: string, description?: string): Promise<Role> 
  * Find a role by its ID.
  * @param id Role ID
  */
-export async function findById(id: number): Promise<Role | null> {
+export async function findById(id: string): Promise<Role | null> {
   return prisma.role.findUnique({
     where: { id },
   });
@@ -41,7 +38,7 @@ export async function findByName(name: string): Promise<Role | null> {
  * @param data Fields to update
  */
 export async function update(
-  id: number,
+  id: string,
   data: Partial<{ name: string; description: string }>,
 ): Promise<Role> {
   return prisma.role.update({
@@ -54,7 +51,7 @@ export async function update(
  * Delete a role by its ID.
  * @param id Role ID
  */
-export async function deleteById(id: number): Promise<Role> {
+export async function deleteById(id: string): Promise<Role> {
   return prisma.role.delete({
     where: { id },
   });
@@ -71,7 +68,7 @@ export async function findAll(): Promise<Role[]> {
  * Get a user with a specific role.
  * @param roleId Role ID
  */
-export async function getUserWithRole(roleId: number) {
+export async function getUserWithRole(roleId: string) {
   return prisma.role.findUnique({
     where: { id: roleId },
     include: { user: true },
@@ -79,7 +76,7 @@ export async function getUserWithRole(roleId: number) {
 }
 
 // Assigns a role to a user (many-to-many relation).
-export const assignUser = async (userId: number, roleId: number) => {
+export const assignUser = async (userId: string, roleId: string) => {
   return prisma.user.update({
     where: { id: userId },
     data: {
@@ -89,7 +86,7 @@ export const assignUser = async (userId: number, roleId: number) => {
 };
 
 // Removes a role from a user (one-to-one relation).
-export const removeUser = async (roleId: number) => {
+export const removeUser = async (roleId: string) => {
   return prisma.role.update({
     where: { id: roleId },
     data: {

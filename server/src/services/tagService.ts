@@ -21,7 +21,7 @@ export async function createTag(tagData: { name: string }) {
  * Delete a tag by its ID.
  * @param tagId - ID of the tag to delete
  */
-export async function deleteTag(tagId: number) {
+export async function deleteTag(tagId: string) {
   await tagModel.deleteById(tagId);
 }
 
@@ -31,6 +31,6 @@ export async function deleteTag(tagId: number) {
  * @param tagData Data to update the tag
  * @returns The updated tag
  */
-export async function updateTag(tagId: number, tagData: { name: string }) {
+export async function updateTag(tagId: string, tagData: { name: string }) {
   return await tagModel.update(tagId, tagData);
 }

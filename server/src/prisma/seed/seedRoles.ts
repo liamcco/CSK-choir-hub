@@ -186,22 +186,22 @@ export default async function seedRoles(
 }
 
 export interface Roles {
-  conductorKK: { id: number };
-  conductorDK: { id: number };
-  conductorMK: { id: number };
-  concertMaster1: { id: number };
-  consertMasterKK: { id: number };
-  consertMasterDK: { id: number };
-  consertMasterMK: { id: number };
-  treasurer: { id: number };
-  president: { id: number };
-  vicePresident: { id: number };
-  secretary: { id: number };
-  prmaster: { id: number };
-  sexmaster: { id: number };
-  sexmastress: { id: number };
-  gigmaster: { id: number };
-  gigmasterKK: { id: number };
-  gigmasterDK: { id: number };
-  gigmasterMK: { id: number };
+  conductorKK: { id: string };
+  conductorDK: { id: string };
+  conductorMK: { id: string };
+  concertMaster1: { id: string };
+  consertMasterKK: { id: string };
+  consertMasterDK: { id: string };
+  consertMasterMK: { id: string };
+  treasurer: { id: string };
+  president: { id: string };
+  vicePresident: { id: string };
+  secretary: { id: string };
+  prmaster: { id: string };
+  sexmaster: { id: string };
+  sexmastress: { id: string };
+  gigmaster: { id: string };
+  gigmasterKK: { id: string };
+  gigmasterDK: { id: string };
+  gigmasterMK: { id: string };
 }

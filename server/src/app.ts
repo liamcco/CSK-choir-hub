@@ -1,3 +1,4 @@
+import { toNodeHandler } from 'better-auth/node';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
@@ -6,6 +7,8 @@ import helmet from 'helmet';
 
 import routes from '@/api/routes';
 import { errorHandler, logAtLevel } from '@/middleware';
+
+import { auth } from './lib/auth';
 
 const app = express();
 
@@ -20,6 +23,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(cookieParser());
+
+/* ---- Authentication ---- */
+app.all('/api/auth/{*any}', toNodeHandler(auth));
 
 /* ---- Utility Middlewares ---- */
 app.use(express.json());

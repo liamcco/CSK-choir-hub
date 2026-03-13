@@ -20,12 +20,6 @@ security:
 
 # Paths grouped by feature area
 paths:
-  # Auth
-  /auth/login:
-    $ref: '../routes/auth/auth.yaml#/paths/~1auth~1login'
-  /auth/authenticate:
-    $ref: '../routes/auth/auth.yaml#/paths/~1auth~1authenticate'
-
   # Books
   /books:
     $ref: '../routes/books/books.yaml#/paths/~1books'
@@ -79,12 +73,6 @@ paths:
     $ref: '../routes/tags/tags.yaml#/paths/~1tags'
   /tags/{tagId}:
     $ref: '../routes/tags/tags.yaml#/paths/~1tags~1{tagId}'
-
-  # Users
-  /users:
-    $ref: '../routes/users/users.yaml#/paths/~1users'
-  /users/{userId}:
-    $ref: '../routes/users/users.yaml#/paths/~1users~1{userId}'
 
 components:
   # Reusable schemas
@@ -153,12 +141,6 @@ components:
 
   # Reusable request bodies
   requestBodies:
-    RegisterUser:
-      $ref: './components.yaml#/requestBodies/RegisterUser'
-    LoginUser:
-      $ref: './components.yaml#/requestBodies/LoginUser'
-    UpdateUser:
-      $ref: './components.yaml#/requestBodies/UpdateUser'
     CreateEvent:
       $ref: './components.yaml#/requestBodies/CreateEvent'
     UpdateAttendance:

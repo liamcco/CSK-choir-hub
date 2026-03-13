@@ -16,83 +16,67 @@ export const getBooks = async (req: Request, res: Response, next: NextFunction) 
 
 // Get a book by ID
 export const getBookWithId = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId ?? '', 10);
+  const bookId = req.params.bookId;
 
-  if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
+  if (!bookId) throw new BadRequestError('Invalid book ID');
 
-  try {
-    const book = await bookService.getBookById(bookId);
+  const book = await bookService.getBookById(bookId);
 
-    return res.json({ book });
-  } catch (error) {
-    return next(error);
-  }
+  return res.json({ book });
 };
 
 // Create a new book
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   const { title } = req.body;
 
-  if (!title) return next(new BadRequestError('Title is required'));
+  if (!title) throw new BadRequestError('Title is required');
 
-  try {
-    const newBook = await bookService.createBook({ title });
+  const newBook = await bookService.createBook({ title });
 
-    return res.status(201).json({ book: newBook });
-  } catch (error) {
-    return next(error);
-  }
+  return res.status(201).json({ book: newBook });
 };
 
 // Delete a book by ID
 export const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId ?? '', 10);
+  const bookId = req.params.bookId;
 
-  if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
+  if (!bookId) throw new BadRequestError('Invalid book ID');
 
-  try {
-    await bookService.deleteBook(bookId);
+  const book = await bookService.getBookById(bookId);
 
-    return res.status(204).send();
-  } catch (error) {
-    return next(error);
-  }
+  if (!book) throw new BadRequestError('Book not found');
+
+  await bookService.deleteBook(bookId);
+
+  return res.status(204).send();
 };
 
 // Add a song to a book
 export const addSongToBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId ?? '', 10);
+  const bookId = req.params.bookId;
 
-  if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
+  if (!bookId) throw new BadRequestError('Invalid book ID');
 
   const { songId } = req.body;
 
-  if (!songId) return next(new BadRequestError('songId is required'));
+  if (!songId) throw new BadRequestError('songId is required');
 
-  try {
-    await bookService.addSongToBook(bookId, songId);
+  await bookService.addSongToBook(bookId, songId);
 
-    return res.status(201).send();
-  } catch (error) {
-    return next(error);
-  }
+  return res.status(201).send();
 };
 
 // Remove a song from a book
 export const removeSongFromBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId ?? '', 10);
+  const bookId = req.params.bookId;
 
-  if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
+  if (!bookId) throw new BadRequestError('Invalid book ID');
 
   const { songId } = req.body;
 
-  if (!songId) return next(new BadRequestError('songId is required'));
+  if (!songId) throw new BadRequestError('songId is required');
 
-  try {
-    await bookService.removeSongFromBook(bookId, songId);
+  await bookService.removeSongFromBook(bookId, songId);
 
-    return res.status(204).send();
-  } catch (error) {
-    return next(error);
-  }
+  return res.status(204).send();
 };
