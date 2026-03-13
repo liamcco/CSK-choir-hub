@@ -80,12 +80,6 @@ components:
     # Users & auth
     User:
       $ref: './components.yaml#/schemas/User'
-    RegisterUserInput:
-      $ref: './components.yaml#/schemas/RegisterUserInput'
-    LoginUserInput:
-      $ref: './components.yaml#/schemas/LoginUserInput'
-    UpdateUserInput:
-      $ref: './components.yaml#/schemas/UpdateUserInput'
 
     # Events
     CSKEventType:
