@@ -14,9 +14,11 @@
     "seed-db": "prisma db seed"
   },
   "dependencies": {
+    "@better-auth/infra": "^0.1.11",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.3.0",
     "bcryptjs": "^2.4.3",
+    "better-auth": "^1.5.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
