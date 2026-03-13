@@ -1,5 +1,6 @@
-import { authenticate, login, logout, register } from '@api/controllers/authController';
 import { Router } from 'express';
+
+import { authenticate, login, logout, register } from '@/api/controllers/authController';
 
 const router = Router();
 

@@ -1,6 +1,7 @@
-import { addUserToGroup, removeUserFromGroup } from '@api/controllers/groupsController';
-import { requireAuth } from '@middleware';
 import { Router } from 'express';
+
+import { addUserToGroup, removeUserFromGroup } from '@/api/controllers/groupsController';
+import { requireAuth } from '@/middleware';
 
 const router = Router();
 

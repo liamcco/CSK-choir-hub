@@ -1,12 +1,13 @@
+import { Router } from 'express';
+
 import {
   createEvent,
   deleteEvent,
   getEventDetail,
   getEvents,
   updateEvent,
-} from '@api/controllers/eventsController';
-import { requireAuth } from '@middleware/authMiddleware';
-import { Router } from 'express';
+} from '@/api/controllers/eventsController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 import attendanceRoutes from './attendance';
 import registrationRoutes from './registrations';

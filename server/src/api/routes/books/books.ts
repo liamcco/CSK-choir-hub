@@ -1,6 +1,7 @@
-import { createBook, deleteBook, getBookWithId, getBooks } from '@api/controllers/booksController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { createBook, deleteBook, getBookWithId, getBooks } from '@/api/controllers/booksController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 import songsRouter from './songs';
 

@@ -1,8 +1,9 @@
-import { userModel } from '@db';
-import { type Group, type Role } from '@prisma/generated/client';
-import { ForbiddenError, UnauthorizedError } from '@utils';
 import { type NextFunction, type Request, type Response } from 'express';
 import jwt from 'jsonwebtoken';
+
+import { userModel } from '@/db';
+import { type Group, type Role } from '@/prisma/generated/client';
+import { ForbiddenError, UnauthorizedError } from '@/utils';
 
 interface JwtPayload {
   userId: number;
@@ -66,7 +67,7 @@ export const requireAuth = (rules?: AccessRules) => {
 
       // Self check
       if (rules?.allowSelf && rules.paramKey) {
-        const targetId = parseInt(req.params[rules.paramKey], 10);
+        const targetId = parseInt(req.params[rules.paramKey] ?? '', 10);
 
         if (req.user.id !== targetId) {
           return next(new ForbiddenError('Forbidden: Not your resource.'));

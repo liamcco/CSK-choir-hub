@@ -1,6 +1,7 @@
-import { assignUserToRole, removeUserFromRole } from '@api/controllers/rolesController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { assignUserToRole, removeUserFromRole } from '@/api/controllers/rolesController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 const router = Router();
 

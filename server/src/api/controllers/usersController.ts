@@ -1,6 +1,7 @@
-import * as userService from '@services/userService';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import * as userService from '@/services/userService';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all users
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,7 +26,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 // Get a user by ID
 export const getUserWithId = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = parseInt(req.params.userId, 10);
+  const userId = parseInt(req.params.userId ?? '', 10);
 
   if (isNaN(userId)) return next(new BadRequestError('Invalid user ID'));
 
@@ -40,7 +41,7 @@ export const getUserWithId = async (req: Request, res: Response, next: NextFunct
 
 // Update a user by ID
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = parseInt(req.params.userId, 10);
+  const userId = parseInt(req.params.userId ?? '', 10);
 
   if (isNaN(userId)) return next(new BadRequestError('Invalid user ID'));
 
@@ -62,7 +63,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 // Delete a user by ID
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = parseInt(req.params.userId, 10);
+  const userId = parseInt(req.params.userId ?? '', 10);
 
   if (isNaN(userId)) return next(new BadRequestError('Invalid user ID'));
 

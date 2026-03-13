@@ -1,6 +1,7 @@
-import * as songService from '@services/songService';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import * as songService from '@/services/songService';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all songs
 export const getSongs = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ export const createSong = async (req: Request, res: Response, next: NextFunction
 
 // Delete a song by ID
 export const deleteSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = parseInt(req.params.id, 10);
+  const songId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(songId)) return next(new BadRequestError('Invalid song ID'));
 
@@ -45,7 +46,7 @@ export const deleteSong = async (req: Request, res: Response, next: NextFunction
 
 // Assign a tag to a song
 export const assignTagToSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = parseInt(req.params.id, 10);
+  const songId = parseInt(req.params.id ?? '', 10);
   const { tagId } = req.body;
 
   if (isNaN(songId) || !tagId) {
@@ -63,7 +64,7 @@ export const assignTagToSong = async (req: Request, res: Response, next: NextFun
 
 // Remove a tag from a song
 export const removeTagFromSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = parseInt(req.params.id, 10);
+  const songId = parseInt(req.params.id ?? '', 10);
   const { tagId } = req.body;
 
   if (isNaN(songId) || !tagId) return next(new BadRequestError('Invalid song ID or tag ID'));

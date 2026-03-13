@@ -40,7 +40,7 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
     "paths": {
-      "@*": ["*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["src/**/*"],

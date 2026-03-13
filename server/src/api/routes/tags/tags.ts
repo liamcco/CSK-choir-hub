@@ -1,6 +1,7 @@
-import { createTag, deleteTag, getTags } from '@api/controllers/tagsController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { createTag, deleteTag, getTags } from '@/api/controllers/tagsController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 const router = Router();
 

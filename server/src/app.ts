@@ -1,10 +1,11 @@
-import routes from '@api/routes';
-import { errorHandler, logAtLevel } from '@middleware';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+
+import routes from '@/api/routes';
+import { errorHandler, logAtLevel } from '@/middleware';
 
 const app = express();
 

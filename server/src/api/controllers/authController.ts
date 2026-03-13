@@ -1,8 +1,9 @@
-import * as authService from '@services/authService';
-import * as userService from '@services/userService';
-import { BadRequestError, UnauthorizedError } from '@utils';
 import { type NextFunction, type Request, type Response } from 'express';
 import { z } from 'zod';
+
+import * as authService from '@/services/authService';
+import * as userService from '@/services/userService';
+import { BadRequestError, UnauthorizedError } from '@/utils';
 
 type CookieOptions = {
   httpOnly: boolean;

@@ -1,4 +1,4 @@
-import { GroupType, type PrismaClient } from '@prisma/generated/client';
+import { GroupType, type PrismaClient } from '@/prisma/generated/client';
 
 import { type Users } from './seedUsers';
 

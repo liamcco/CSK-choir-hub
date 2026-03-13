@@ -1,9 +1,10 @@
-import * as userModel from '@db/models/userModel';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+
+import * as userModel from '@/db/models/userModel';
 
 import * as userService from '../userService';
 
-jest.mock('@db/models/userModel');
+jest.mock('@/db/models/userModel');
 
 describe('userService', () => {
   beforeEach(() => {

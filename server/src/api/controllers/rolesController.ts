@@ -1,6 +1,7 @@
-import * as roleService from '@services/roleService';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import * as roleService from '@/services/roleService';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all roles
 export const getRoles = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ export const createRole = async (req: Request, res: Response, next: NextFunction
 
 // Delete a role by ID
 export const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
-  const roleId = parseInt(req.params.id, 10);
+  const roleId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(roleId)) return next(new BadRequestError('Invalid role ID'));
 
@@ -45,8 +46,8 @@ export const deleteRole = async (req: Request, res: Response, next: NextFunction
 
 // Assign a user to a role
 export const assignUserToRole = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = parseInt(req.params.userId, 10);
-  const roleId = parseInt(req.params.roleId, 10);
+  const userId = parseInt(req.params.userId ?? '', 10);
+  const roleId = parseInt(req.params.roleId ?? '', 10);
 
   if (isNaN(userId) || isNaN(roleId))
     return next(new BadRequestError('Invalid user ID or role ID'));
@@ -62,7 +63,7 @@ export const assignUserToRole = async (req: Request, res: Response, next: NextFu
 
 // Remove a user from a role
 export const removeUserFromRole = async (req: Request, res: Response, next: NextFunction) => {
-  const roleId = parseInt(req.params.roleId, 10);
+  const roleId = parseInt(req.params.roleId ?? '', 10);
 
   if (isNaN(roleId)) return next(new BadRequestError('Invalid role ID'));
 

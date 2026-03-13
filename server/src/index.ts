@@ -1,5 +1,6 @@
-import { prisma } from '@db';
 import dotenv from 'dotenv';
+
+import { prisma } from '@/db';
 
 import app from './app';
 

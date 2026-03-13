@@ -1,6 +1,7 @@
-import { assignTagToSong, removeTagFromSong } from '@api/controllers/songsController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { assignTagToSong, removeTagFromSong } from '@/api/controllers/songsController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 const router = Router();
 

@@ -1,4 +1,4 @@
-import { type PrismaClient } from '@prisma/generated/client';
+import { type PrismaClient } from '@/prisma/generated/client';
 
 import { type Events } from './seedEvents';
 import { type Users } from './seedUsers';

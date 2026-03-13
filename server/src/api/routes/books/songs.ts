@@ -1,6 +1,7 @@
-import { addSongToBook, removeSongFromBook } from '@api/controllers/booksController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { addSongToBook, removeSongFromBook } from '@/api/controllers/booksController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 const router = Router();
 

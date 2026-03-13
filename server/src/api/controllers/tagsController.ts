@@ -1,6 +1,7 @@
-import * as tagService from '@services/tagService';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import * as tagService from '@/services/tagService';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all tags
 export const getTags = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ export const createTag = async (req: Request, res: Response, next: NextFunction)
 
 // Delete a tag by ID
 export const deleteTag = async (req: Request, res: Response, next: NextFunction) => {
-  const tagId = parseInt(req.params.id, 10);
+  const tagId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(tagId)) return next(new BadRequestError('Invalid tag ID'));
 
@@ -45,7 +46,7 @@ export const deleteTag = async (req: Request, res: Response, next: NextFunction)
 
 // Rename tag with ID
 export const updateTag = async (req: Request, res: Response, next: NextFunction) => {
-  const tagId = parseInt(req.params.id, 10);
+  const tagId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(tagId)) return next(new BadRequestError('Invalid tag ID'));
 

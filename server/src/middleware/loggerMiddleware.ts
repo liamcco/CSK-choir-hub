@@ -1,5 +1,6 @@
-import logger from '@utils/logger';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import logger from '@/utils/logger';
 
 type LogLevel = 1 | 2 | 3 | 4;
 

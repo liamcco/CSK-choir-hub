@@ -1,5 +1,6 @@
-import logger from '@utils/logger';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import logger from '@/utils/logger';
 
 export function errorHandler(err: any, req: Request, res: Response, _next: NextFunction) {
   // Log the error for debugging

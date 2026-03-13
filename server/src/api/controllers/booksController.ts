@@ -1,6 +1,7 @@
-import * as bookService from '@services/bookService';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import * as bookService from '@/services/bookService';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all books
 export const getBooks = async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +16,7 @@ export const getBooks = async (req: Request, res: Response, next: NextFunction) 
 
 // Get a book by ID
 export const getBookWithId = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId, 10);
+  const bookId = parseInt(req.params.bookId ?? '', 10);
 
   if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
 
@@ -45,7 +46,7 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
 
 // Delete a book by ID
 export const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId, 10);
+  const bookId = parseInt(req.params.bookId ?? '', 10);
 
   if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
 
@@ -60,7 +61,7 @@ export const deleteBook = async (req: Request, res: Response, next: NextFunction
 
 // Add a song to a book
 export const addSongToBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId, 10);
+  const bookId = parseInt(req.params.bookId ?? '', 10);
 
   if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
 
@@ -79,7 +80,7 @@ export const addSongToBook = async (req: Request, res: Response, next: NextFunct
 
 // Remove a song from a book
 export const removeSongFromBook = async (req: Request, res: Response, next: NextFunction) => {
-  const bookId = parseInt(req.params.bookId, 10);
+  const bookId = parseInt(req.params.bookId ?? '', 10);
 
   if (isNaN(bookId)) return next(new BadRequestError('Invalid book ID'));
 

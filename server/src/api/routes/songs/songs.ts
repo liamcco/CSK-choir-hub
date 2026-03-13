@@ -1,6 +1,7 @@
-import { createSong, deleteSong, getSongs } from '@api/controllers/songsController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { createSong, deleteSong, getSongs } from '@/api/controllers/songsController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 import tagsRoutes from './tags';
 

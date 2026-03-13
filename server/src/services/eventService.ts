@@ -1,6 +1,6 @@
-import { eventModel, userModel } from '@db';
-import { type AttendanceStatus, type EventType } from '@prisma/generated/client';
-import { NotFoundError } from '@utils';
+import { eventModel, userModel } from '@/db';
+import { type AttendanceStatus, type EventType } from '@/prisma/generated/client';
+import { NotFoundError } from '@/utils';
 
 /**
  * Get all events in the system.

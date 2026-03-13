@@ -1,5 +1,5 @@
-import { prisma } from '@db';
-import { type GroupType } from '@prisma/generated/client';
+import { prisma } from '@/db';
+import { type GroupType } from '@/prisma/generated/client';
 
 /**
  * Creates a new group with the given data.

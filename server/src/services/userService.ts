@@ -1,11 +1,12 @@
-import { prisma } from '@db';
-import * as userModel from '@db/models/userModel';
-import { type User } from '@prisma/generated/client';
-import { NotFoundError, UnauthorizedError } from '@utils';
-import { generateToken } from '@utils/generateToken';
-import logger from '@utils/logger';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
+import { prisma } from '@/db';
+import * as userModel from '@/db/models/userModel';
+import { type User } from '@/prisma/generated/client';
+import { NotFoundError, UnauthorizedError } from '@/utils';
+import { generateToken } from '@/utils/generateToken';
+import logger from '@/utils/logger';
 
 export interface RegisterInput {
   email: string;

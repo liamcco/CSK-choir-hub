@@ -1,7 +1,8 @@
-import { GroupType } from '@prisma/generated/client';
-import { groupService } from '@services';
-import { BadRequestError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import { GroupType } from '@/prisma/generated/client';
+import { groupService } from '@/services';
+import { BadRequestError } from '@/utils/errors';
 
 // Get all groups
 export const getGroups = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,7 +33,7 @@ export const getGroups = async (req: Request, res: Response, next: NextFunction)
 
 // Delete a group by ID
 export const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const groupId = parseInt(req.params.groupId, 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
 
   if (isNaN(groupId)) return next(new BadRequestError('Invalid group ID'));
 
@@ -62,7 +63,7 @@ export const createGroup = async (req: Request, res: Response, next: NextFunctio
 
 // Update a group by ID
 export const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const groupId = parseInt(req.params.groupId, 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
 
   if (isNaN(groupId)) return next(new BadRequestError('Invalid group ID'));
 
@@ -81,7 +82,7 @@ export const updateGroup = async (req: Request, res: Response, next: NextFunctio
 
 // Add a subgroup to a group
 export const addGroupToGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const parentGroupId = parseInt(req.params.groupId, 10);
+  const parentGroupId = parseInt(req.params.groupId ?? '', 10);
   const { subgroupId } = req.body;
 
   if (isNaN(parentGroupId) || isNaN(subgroupId))
@@ -98,8 +99,8 @@ export const addGroupToGroup = async (req: Request, res: Response, next: NextFun
 
 // Remove a subgroup from a group
 export const removeGroupFromGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const parentGroupId = parseInt(req.params.groupId, 10);
-  const subgroupId = parseInt(req.params.groupId, 10);
+  const parentGroupId = parseInt(req.params.groupId ?? '', 10);
+  const subgroupId = parseInt(req.params.subgroupId ?? '', 10);
 
   if (isNaN(parentGroupId) || isNaN(subgroupId))
     return next(new BadRequestError('Invalid group ID or subgroup ID'));
@@ -115,7 +116,7 @@ export const removeGroupFromGroup = async (req: Request, res: Response, next: Ne
 
 // Assign a role to a group
 export const addRoleToGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const groupId = parseInt(req.params.groupId, 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
   const { roleId } = req.body;
 
   if (isNaN(groupId) || isNaN(roleId))
@@ -132,8 +133,8 @@ export const addRoleToGroup = async (req: Request, res: Response, next: NextFunc
 
 // Remove a role from a group
 export const removeRoleFromGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const groupId = parseInt(req.params.groupId, 10);
-  const roleId = parseInt(req.params.roleId, 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
+  const roleId = parseInt(req.params.roleId ?? '', 10);
 
   if (isNaN(groupId) || isNaN(roleId))
     return next(new BadRequestError('Invalid group ID or role ID'));
@@ -150,7 +151,7 @@ export const removeRoleFromGroup = async (req: Request, res: Response, next: Nex
 // Add a user to a group
 export const addUserToGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.body;
-  const groupId = parseInt(req.params.groupId, 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
 
   if (isNaN(userId) || isNaN(groupId))
     return next(new BadRequestError('Invalid user ID or group ID'));
@@ -166,8 +167,8 @@ export const addUserToGroup = async (req: Request, res: Response, next: NextFunc
 
 // Remove a user from a group
 export const removeUserFromGroup = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = parseInt(req.params.userId, 10);
-  const groupId = parseInt(req.params.groupId, 10);
+  const userId = parseInt(req.params.userId ?? '', 10);
+  const groupId = parseInt(req.params.groupId ?? '', 10);
 
   if (isNaN(userId) || isNaN(groupId))
     return next(new BadRequestError('Invalid user ID or group ID'));

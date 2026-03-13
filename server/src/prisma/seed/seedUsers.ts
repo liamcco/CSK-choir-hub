@@ -1,5 +1,6 @@
-import { type PrismaClient } from '@prisma/generated/client';
 import bcrypt from 'bcryptjs';
+
+import { type PrismaClient } from '@/prisma/generated/client';
 
 export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
   const alice = await prisma.user.create({

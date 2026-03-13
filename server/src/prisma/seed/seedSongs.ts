@@ -1,5 +1,5 @@
-import { type PrismaClient } from '@prisma/generated/client';
-import { type Song, Voice } from '@prisma/generated/client';
+import { type PrismaClient } from '@/prisma/generated/client';
+import { type Song, Voice } from '@/prisma/generated/client';
 
 import { type Books } from './seedBooks';
 import { type Tags } from './seedTags';

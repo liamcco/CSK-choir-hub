@@ -1,6 +1,7 @@
-import { eventService } from '@services';
-import { BadRequestError, NotFoundError } from '@utils/errors';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import { eventService } from '@/services';
+import { BadRequestError, NotFoundError } from '@/utils/errors';
 
 // Get all events
 export const getEvents = async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +16,7 @@ export const getEvents = async (req: Request, res: Response, next: NextFunction)
 
 // Get event details by ID
 export const getEventDetail = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 
@@ -28,7 +29,7 @@ export const getEventDetail = async (req: Request, res: Response, next: NextFunc
 
 // Delete an event by ID
 export const deleteEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 
@@ -64,7 +65,7 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
 
 // Update an event by ID
 export const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 
@@ -90,7 +91,7 @@ export const updateEvent = async (req: Request, res: Response, next: NextFunctio
 
 // Update user attendance for an event
 export const updateUserAttendance = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 
@@ -109,7 +110,7 @@ export const updateUserAttendance = async (req: Request, res: Response, next: Ne
 
 // Register a user for an event
 export const registerUserForEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 
@@ -128,7 +129,7 @@ export const registerUserForEvent = async (req: Request, res: Response, next: Ne
 
 // Unregister a user from an event
 export const unregisterUserFromEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = parseInt(req.params.id, 10);
+  const eventId = parseInt(req.params.id ?? '', 10);
 
   if (isNaN(eventId)) return next(new BadRequestError('Invalid event ID'));
 

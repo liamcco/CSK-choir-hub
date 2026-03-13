@@ -1,6 +1,7 @@
-import { deleteUser, getUserWithId, getUsers, updateUser } from '@api/controllers/usersController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { deleteUser, getUserWithId, getUsers, updateUser } from '@/api/controllers/usersController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 const router = Router();
 

@@ -1,6 +1,7 @@
-import { createRole, deleteRole, getRoles } from '@api/controllers/rolesController';
-import { requireAuth } from '@middleware/authMiddleware';
 import { Router } from 'express';
+
+import { createRole, deleteRole, getRoles } from '@/api/controllers/rolesController';
+import { requireAuth } from '@/middleware/authMiddleware';
 
 import roleUserRoutes from './user';
 

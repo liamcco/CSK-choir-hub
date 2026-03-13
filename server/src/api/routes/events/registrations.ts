@@ -1,5 +1,6 @@
-import { registerUserForEvent, unregisterUserFromEvent } from '@api/controllers/eventsController';
 import { Router } from 'express';
+
+import { registerUserForEvent, unregisterUserFromEvent } from '@/api/controllers/eventsController';
 
 const router = Router({ mergeParams: true });
 

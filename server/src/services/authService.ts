@@ -1,8 +1,9 @@
-import { userModel } from '@db';
-import { NotFoundError } from '@utils/errors';
-import { generateToken } from '@utils/generateToken';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
+import { userModel } from '@/db';
+import { NotFoundError } from '@/utils/errors';
+import { generateToken } from '@/utils/generateToken';
 
 interface LoginInput {
   identifier: string; // email or username
