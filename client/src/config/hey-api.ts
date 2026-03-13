@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-import { Auth, CreateClientConfig } from '@/lib/api-client/client';
+import { type Auth, type CreateClientConfig } from '@/lib/api-client/client';
 
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,

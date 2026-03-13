@@ -51,7 +51,13 @@ export async function signin(initialState: FormState, formData: FormData): Promi
     throw new Error('Authentication token not found in response cookies.');
   }
 
-  const token = tokenCookie.split(';')[0].split('=')[1];
+  const token = tokenCookie.split(';')[0];
+
+  if (!token) {
+    throw new Error('Authentication token is empty.');
+  }
+
+  const tokenValue = token.split('=')[1];
 
   const cookieStore = await cookies();
 

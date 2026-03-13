@@ -18,7 +18,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/ui/utils';
 
-import { FormState, createEventAction } from './actions';
+import { type FormState, createEventAction } from './actions';
 
 const eventTypes = ['REHEARSAL', 'CONCERT', 'GIG', 'PARTY', 'MEETING', 'OTHER'] as const;
 

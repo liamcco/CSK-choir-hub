@@ -10,7 +10,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/utils/ui/utils';
 
-import { FormState, signin } from './actions';
+import { type FormState, signin } from './actions';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations();

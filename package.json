@@ -4,7 +4,7 @@
   "description": "Choir Hub - A project aimed to simplify the communication within CSK",
   "main": "server/dist/index.js",
   "scripts": {
-    "dev": "concurrently \"bun server\" \"bun client\"",
+    "dev": "concurrently 'bun server' 'bun client'",
     "server": "cd server && bun dev",
     "client": "cd client && bun dev",
     "lint": "eslint . --fix",
