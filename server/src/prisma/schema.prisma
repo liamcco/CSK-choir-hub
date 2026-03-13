@@ -7,21 +7,23 @@ datasource db {
   provider = "postgresql"
 }
 
-enum WebRole {
-  USER
-  ADMIN
-}
-
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
 
-  email        String @unique
   username     String @unique
   passwordHash String
-  firstName    String
-  lastName     String
+
+  @@unique([email])
+  @@map("user")
+
 
   dietaryPreferences String?
 
@@ -31,8 +33,54 @@ model User {
   attendances   EventAttendance[]
   registrations EventRegistration[]
   songKnowledge SongKnowledge[]
+}
 
-  webRole WebRole @default(USER)
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 enum GroupType {
@@ -45,7 +93,7 @@ enum GroupType {
 }
 
 model Group {
-  id        Int       @id @default(autoincrement())
+  id        String   @id
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String    @unique
@@ -61,7 +109,7 @@ model Group {
 }
 
 model Role {
-  id        Int      @id @default(autoincrement())
+  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
@@ -69,8 +117,8 @@ model Role {
   description String?
   groups      Group[]
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user   User? @relation(fields: [id], references: [id])
+  userId String?
 }
 
 enum EventType {
@@ -83,7 +131,7 @@ enum EventType {
 }
 
 model Event {
-  id        Int       @id @default(autoincrement())
+  id        String   @id
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   name      String
@@ -107,8 +155,8 @@ enum AttendanceStatus {
 }
 
 model EventAttendance {
-  userId  Int
-  eventId Int
+  userId  String
+  eventId String
   status  AttendanceStatus
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -120,8 +168,8 @@ model EventAttendance {
 }
 
 model EventRegistration {
-  userId    Int
-  eventId   Int
+  userId    String
+  eventId   String
   createdAt DateTime @default(now())
 
   comments           String?
@@ -136,7 +184,7 @@ model EventRegistration {
 }
 
 model Book {
-  id        Int      @id @default(autoincrement())
+  id        String   @id
   title      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -145,7 +193,7 @@ model Book {
 }
 
 model Song {
-  id        Int      @id @default(autoincrement())
+  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String
@@ -160,8 +208,8 @@ model Song {
 }
 
 model BookSong {
-  bookId Int
-  songId Int
+  bookId String
+  songId String
 
   // If you only need a single page number, keep `page` and delete `pageStart/pageEnd`.
   pageStart Int?
@@ -185,8 +233,8 @@ enum KnowledgeLevel {
 }
 
 model SongKnowledge {
-  userId Int
-  songId Int
+  userId String
+  songId String
   voice  Voice
 
   level KnowledgeLevel
@@ -200,7 +248,7 @@ model SongKnowledge {
 }
 
 model Tag {
-  id    Int    @id @default(autoincrement())
+  id    String   @id
   name  String @unique
   songs Song[]
 
