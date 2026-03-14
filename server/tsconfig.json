@@ -1,41 +1,36 @@
 {
   "compilerOptions": {
-    // Environment
-    "lib": ["dom", "dom.iterable", "esnext"],
+    // Node runtime
+    "lib": ["esnext"],
+    "types": ["node"],
     "target": "esnext",
-    "module": "preserve",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
+    "module": "esnext",
 
-    // Bundler mode
+    // ESM output
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
     "noEmit": false,
 
-    // Best practices
+    // Type safety
     "strict": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
+    "noImplicitReturns": true,
 
-    // Miccellaneous
+    // Output
     "outDir": "./dist",
     "rootDir": "./src",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
     "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitReturns": true,
+
+    // Interop
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": "./src",
