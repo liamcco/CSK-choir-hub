@@ -18,12 +18,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  username     String? @unique
-  passwordHash String
-
   @@unique([email])
   @@map("user")
-
 
   dietaryPreferences String?
 
