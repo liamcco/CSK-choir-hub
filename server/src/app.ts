@@ -26,6 +26,8 @@ app.use(
 /* ---- Authentication ---- */
 app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw));
 
+app.get('/', (c) => c.json({ message: 'Welcome to the CSK Choir Hub API!' }));
+
 /* ---- Routes ---- */
 app.route('/api', routes); // Main API routes
 
