@@ -1,71 +1,55 @@
-export class BadRequestError extends Error {
-  status = 400;
-  constructor(message: string) {
-    super(message);
-    this.name = 'BadRequestError';
+import { HTTPException } from 'hono/http-exception';
+
+export class BadRequestError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(400, { message });
   }
 }
 
-export class UnauthorizedError extends Error {
-  status = 401;
+export class UnauthorizedError extends HTTPException {
   constructor(message: string) {
-    super(message);
-    this.name = 'UnauthorizedError';
+    super(401, { message });
   }
 }
 
-export class ForbiddenError extends Error {
-  status = 403;
-  constructor(message: string) {
-    super(message);
-    this.name = 'ForbiddenError';
+export class ForbiddenError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(403, { message });
   }
 }
 
-export class NotFoundError extends Error {
-  status = 404;
-  constructor(message: string) {
-    super(message);
-    this.name = 'NotFoundError';
+export class NotFoundError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(404, { message });
   }
 }
 
-export class ConflictError extends Error {
-  status = 409;
-  constructor(message: string) {
-    super(message);
-    this.name = 'ConflictError';
+export class ConflictError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(409, { message });
   }
 }
 
-export class ValidationError extends Error {
-  status = 422;
-  constructor(message: string) {
-    super(message);
-    this.name = 'ValidationError';
+export class ValidationError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(422, { message });
   }
 }
 
-export class InternalServerError extends Error {
-  status = 500;
-  constructor(message: string) {
-    super(message);
-    this.name = 'InternalServerError';
+export class InternalServerError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(500, { message });
   }
 }
 
-export class ServiceUnavailableError extends Error {
-  status = 503;
-  constructor(message: string) {
-    super(message);
-    this.name = 'ServiceUnavailableError';
+export class ServiceUnavailableError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(503, { message });
   }
 }
 
-export class GatewayTimeoutError extends Error {
-  status = 504;
-  constructor(message: string) {
-    super(message);
-    this.name = 'GatewayTimeoutError';
+export class GatewayTimeoutError extends HTTPException {
+  constructor(message: string | undefined) {
+    super(504, { message });
   }
 }

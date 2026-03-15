@@ -1,6 +1,6 @@
 import { groupModel } from '@/db';
 import { type GroupType } from '@/prisma/generated/client';
-import { NotFoundError } from '@/utils';
+import { NotFoundError } from '@/utils/errors';
 
 /**
  * Get all groups in the system.

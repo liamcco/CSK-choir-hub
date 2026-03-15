@@ -1,6 +1,6 @@
 import { eventModel, userModel } from '@/db';
 import { type AttendanceStatus, type EventType } from '@/prisma/generated/client';
-import { NotFoundError } from '@/utils';
+import { NotFoundError } from '@/utils/errors';
 
 /**
  * Get all events in the system.

@@ -1,50 +1,42 @@
-import { type NextFunction, type Request, type Response } from 'express';
+import { Context } from 'hono';
 
 import { eventService } from '@/services';
 import { BadRequestError, NotFoundError } from '@/utils/errors';
 
 // Get all events
-export const getEvents = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const events = await eventService.getAllEvents();
+export const getEvents = async (c: Context) => {
+  const events = await eventService.getAllEvents();
 
-    return res.json({ events });
-  } catch (error) {
-    return next(error);
-  }
+  return c.json({ events });
 };
 
 // Get event details by ID
-export const getEventDetail = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const getEventDetail = async (c: Context) => {
+  const eventId = c.req.param('id');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
   const event = await eventService.getEvent(eventId);
 
-  if (!event) return next(new NotFoundError('Event not found'));
+  if (!event) throw new NotFoundError('Event not found');
 
-  return res.json({ ...event });
+  return c.json({ ...event });
 };
 
 // Delete an event by ID
-export const deleteEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const deleteEvent = async (c: Context) => {
+  const eventId = c.req.param('id');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
-  try {
-    await eventService.deleteEvent(eventId);
+  await eventService.deleteEvent(eventId);
 
-    return res.status(204).send();
-  } catch (error) {
-    return next(error);
-  }
+  return c.status(204);
 };
 
 // Create a new event
-export const createEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, type, description, dateStart: _dateStart, place } = req.body;
+export const createEvent = async (c: Context) => {
+  const { name, type, description, dateStart: _dateStart, place } = await c.req.json();
 
   if (!name || !_dateStart || !place)
     throw new BadRequestError('Name, start date, and place are required');
@@ -56,76 +48,72 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
   }
   const newEvent = await eventService.createEvent({ name, type, description, dateStart, place });
 
-  return res.status(201).json({ event: newEvent });
+  return c.json({ event: newEvent }, 201);
 };
 
 // Update an event by ID
-export const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const updateEvent = async (c: Context) => {
+  const eventId = c.req.param('eventId');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
-  const { name, type, description, dateStart, place } = req.body;
+  const { name, type, description, dateStart, place } = await c.req.json();
 
   if (!name && !dateStart && !place && !type && !description)
     throw new BadRequestError('At least one field is required to update');
 
-  try {
-    const updatedEvent = await eventService.updateEvent(eventId, {
-      name,
-      type,
-      description,
-      dateStart,
-      place,
-    });
+  const updatedEvent = await eventService.updateEvent(eventId, {
+    name,
+    type,
+    description,
+    dateStart,
+    place,
+  });
 
-    return res.json({ event: updatedEvent });
-  } catch (error: any) {
-    return next(error);
-  }
+  return c.json({ event: updatedEvent });
 };
 
 // Update user attendance for an event
-export const updateUserAttendance = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const updateUserAttendance = async (c: Context) => {
+  const eventId = c.req.param('eventId');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
-  const { userId, status } = req.body;
+  const { userId, status } = await c.req.json();
 
   if (!userId) throw new BadRequestError('User ID and status are required');
 
   const updatedAttendance = await eventService.updateUserAttendance(eventId, userId, status);
 
-  return res.json({ attendance: updatedAttendance });
+  return c.json({ attendance: updatedAttendance });
 };
 
 // Register a user for an event
-export const registerUserForEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const registerUserForEvent = async (c: Context) => {
+  const eventId = c.req.param('eventId');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
-  const { userId } = req.body;
+  const { userId } = await c.req.json();
 
-  if (!userId) return next(new BadRequestError('User ID is required'));
+  if (!userId) throw new BadRequestError('User ID is required');
 
   const registration = await eventService.registerUser(eventId, userId);
 
-  return res.status(201).json({ registration });
+  return c.json({ registration }, 201);
 };
 
 // Unregister a user from an event
-export const unregisterUserFromEvent = async (req: Request, res: Response, next: NextFunction) => {
-  const eventId = req.params.eventId;
+export const unregisterUserFromEvent = async (c: Context) => {
+  const eventId = c.req.param('eventId');
 
   if (!eventId) throw new BadRequestError('Invalid event ID');
 
-  const { userId } = req.body;
+  const { userId } = await c.req.json();
 
-  if (!userId) return next(new BadRequestError('User ID is required'));
+  if (!userId) throw new BadRequestError('User ID is required');
 
   await eventService.unregisterUser(eventId, userId);
 
-  return res.status(204).send();
+  return c.status(204);
 };

@@ -1,9 +1,9 @@
-import { type NextFunction, type Request, type Response } from 'express';
+import { Context } from 'hono';
 
 import { healthService } from '@/services';
 
-export const health = async (req: Request, res: Response, next: NextFunction) => {
+export const health = async (c: Context) => {
   const status = await healthService.checkHealth();
 
-  return res.status(200).send({ status });
+  return c.json({ status });
 };

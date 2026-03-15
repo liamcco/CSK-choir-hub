@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import bookRoutes from './books';
 import eventRoutes from './events';
@@ -8,14 +8,14 @@ import roleRoutes from './roles';
 import songRoutes from './songs';
 import tagRoutes from './tags';
 
-const router = Router();
+const router = new Hono();
 
-router.use('/books', bookRoutes);
-router.use('/events', eventRoutes);
-router.use('/groups', groupRoutes);
-router.use('/roles', roleRoutes);
-router.use('/songs', songRoutes);
-router.use('/tags', tagRoutes);
-router.use('/health', healthRoute);
+router.route('/books', bookRoutes);
+router.route('/events', eventRoutes);
+router.route('/groups', groupRoutes);
+router.route('/roles', roleRoutes);
+router.route('/songs', songRoutes);
+router.route('/tags', tagRoutes);
+router.route('/health', healthRoute);
 
 export default router;

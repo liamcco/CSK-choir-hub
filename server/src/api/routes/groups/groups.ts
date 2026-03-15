@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import {
   createGroup,
@@ -6,21 +6,20 @@ import {
   getGroups,
   updateGroup,
 } from '@/api/controllers/groupsController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
 import groupsRouter from './group';
 import rolesRouter from './role';
 import usersRouter from './user';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getGroups);
-router.post('/', requireAuth({ groups: ['Admins'] }), createGroup);
-router.put('/:groupId', requireAuth({ groups: ['Admins'] }), updateGroup);
-router.delete('/:groupId', requireAuth({ groups: ['Admins'] }), deleteGroup);
+router.post('/', createGroup);
+router.put('/:groupId', updateGroup);
+router.delete('/:groupId', deleteGroup);
 
-router.use('/:groupId/groups', requireAuth({ groups: ['Admins'] }), groupsRouter);
-router.use('/:groupId/roles', requireAuth({ groups: ['Admins'] }), rolesRouter);
-router.use('/:groupId/users', requireAuth({ groups: ['Admins'] }), usersRouter);
+router.route('/:groupId/groups', groupsRouter);
+router.route('/:groupId/roles', rolesRouter);
+router.route('/:groupId/users', usersRouter);
 
 export default router;

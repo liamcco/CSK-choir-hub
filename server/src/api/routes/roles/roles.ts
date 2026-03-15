@@ -1,16 +1,15 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { createRole, deleteRole, getRoles } from '@/api/controllers/rolesController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
 import roleUserRoutes from './user';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getRoles);
 router.post('/', createRole);
-router.delete('/:roleId', requireAuth({ groups: ['Admins'] }), deleteRole);
+router.delete('/:roleId', deleteRole);
 
-router.use('/:roleId/user', requireAuth({ groups: ['Admins'] }), roleUserRoutes);
+router.route('/:roleId/user', roleUserRoutes);
 
 export default router;

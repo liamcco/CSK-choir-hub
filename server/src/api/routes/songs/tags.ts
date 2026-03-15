@@ -1,11 +1,10 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { assignTagToSong, removeTagFromSong } from '@/api/controllers/songsController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
-const router = Router();
+const router = new Hono();
 
-router.post('/', requireAuth({ groups: ['Admins'] }), assignTagToSong);
-router.delete('/', requireAuth({ groups: ['Admins'] }), removeTagFromSong);
+router.post('/', assignTagToSong);
+router.delete('/', removeTagFromSong);
 
 export default router;

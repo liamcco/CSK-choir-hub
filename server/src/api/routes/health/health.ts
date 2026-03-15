@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { health } from '@/api/controllers/healthController';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', health);
 

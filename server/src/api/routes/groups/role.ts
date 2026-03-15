@@ -1,11 +1,10 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { addRoleToGroup, removeRoleFromGroup } from '@/api/controllers/groupsController';
-import { requireAuth } from '@/middleware';
 
-const router = Router();
+const router = new Hono();
 
-router.post('/', requireAuth({ groups: ['Admins'] }), addRoleToGroup);
-router.delete('/:roleId', requireAuth({ groups: ['Admins'] }), removeRoleFromGroup);
+router.post('/', addRoleToGroup);
+router.delete('/:roleId', removeRoleFromGroup);
 
 export default router;

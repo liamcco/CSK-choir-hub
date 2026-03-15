@@ -1,41 +1,41 @@
-import { type NextFunction, type Request, type Response } from 'express';
+import { Context } from 'hono';
 
 import * as songService from '@/services/songService';
 import { BadRequestError } from '@/utils/errors';
 
 // Get all songs
-export const getSongs = async (req: Request, res: Response, next: NextFunction) => {
+export const getSongs = async (c: Context) => {
   const songs = await songService.getAllSongs();
 
-  res.json({ songs });
+  c.json({ songs });
 };
 
 // Create a new song
-export const createSong = async (req: Request, res: Response, next: NextFunction) => {
-  const { title } = req.body;
+export const createSong = async (c: Context) => {
+  const { title } = await c.req.json();
 
-  if (!title) return next(new BadRequestError('Song title is required'));
+  if (!title) throw new BadRequestError('Song title is required');
 
   const newSong = await songService.createSong({ title });
 
-  return res.status(201).json(newSong);
+  return c.json(newSong, 201);
 };
 
 // Delete a song by ID
-export const deleteSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = req.params.id;
+export const deleteSong = async (c: Context) => {
+  const songId = c.req.param('id');
 
   if (!songId) throw new BadRequestError('Invalid song ID');
 
   await songService.deleteSong(songId);
 
-  return res.status(204).send();
+  return c.status(204);
 };
 
 // Assign a tag to a song
-export const assignTagToSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = req.params.songId;
-  const { tagId } = req.body;
+export const assignTagToSong = async (c: Context) => {
+  const songId = c.req.param('songId');
+  const { tagId } = await c.req.json();
 
   if (!songId || !tagId) {
     throw new BadRequestError('Invalid song ID or tag ID');
@@ -43,17 +43,17 @@ export const assignTagToSong = async (req: Request, res: Response, next: NextFun
 
   await songService.addTag(songId, tagId);
 
-  return res.status(204).send();
+  return c.status(204);
 };
 
 // Remove a tag from a song
-export const removeTagFromSong = async (req: Request, res: Response, next: NextFunction) => {
-  const songId = req.params.songId;
-  const { tagId } = req.body;
+export const removeTagFromSong = async (c: Context) => {
+  const songId = c.req.param('songId');
+  const { tagId } = await c.req.json();
 
   if (!songId || !tagId) throw new BadRequestError('Invalid song ID or tag ID');
 
   await songService.removeTag(songId, tagId);
 
-  return res.status(204).send();
+  return c.status(204);
 };

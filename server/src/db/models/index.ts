@@ -7,4 +7,3 @@ export * as roleModel from './roleModel';
 export * as songKnowledgeModel from './songKnowledgeModel';
 export * as songModel from './songModel';
 export * as tagModel from './tagModel';
-export * as userModel from './userModel';

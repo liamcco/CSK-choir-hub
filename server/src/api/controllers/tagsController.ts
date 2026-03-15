@@ -1,48 +1,49 @@
-import { type NextFunction, type Request, type Response } from 'express';
+import { Context } from 'hono';
 
 import * as tagService from '@/services/tagService';
 import { BadRequestError } from '@/utils/errors';
 
 // Get all tags
-export const getTags = async (req: Request, res: Response, next: NextFunction) => {
+export const getTags = async (c: Context) => {
   const tags = await tagService.getAllTags();
 
-  res.json({ tags });
+  c.json({ tags });
 };
 
 // Create a new tag
-export const createTag = async (req: Request, res: Response, next: NextFunction) => {
-  const { name } = req.body;
+export const createTag = async (c: Context) => {
+  const { name } = await c.req.json();
 
   if (!name) throw new BadRequestError('Tag name is required');
 
   const newTag = await tagService.createTag(name);
 
-  return res.status(201).json({ tag: newTag });
+  c.status(201);
+  return c.json({ tag: newTag });
 };
 
 // Delete a tag by ID
-export const deleteTag = async (req: Request, res: Response, next: NextFunction) => {
-  const tagId = req.params.id;
+export const deleteTag = async (c: Context) => {
+  const tagId = c.req.param('id');
 
   if (!tagId) throw new BadRequestError('Invalid tag ID');
 
   await tagService.deleteTag(tagId);
 
-  return res.status(204).send();
+  return c.status(204);
 };
 
 // Rename tag with ID
-export const updateTag = async (req: Request, res: Response, next: NextFunction) => {
-  const tagId = req.params.id;
+export const updateTag = async (c: Context) => {
+  const tagId = c.req.param('id');
 
   if (!tagId) throw new BadRequestError('Invalid tag ID');
 
-  const { name } = req.body;
+  const { name } = await c.req.json();
 
   if (!name) throw new BadRequestError('Tag name is required');
 
   const updatedTag = await tagService.updateTag(tagId, name);
 
-  return res.json({ tag: updatedTag });
+  return c.json({ tag: updatedTag });
 };

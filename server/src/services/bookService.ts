@@ -1,5 +1,5 @@
 import { bookModel } from '@/db';
-import { NotFoundError } from '@/utils';
+import { NotFoundError } from '@/utils/errors';
 
 export async function getAllBooks() {
   return await bookModel.findAll();

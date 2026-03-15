@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { registerUserForEvent, unregisterUserFromEvent } from '@/api/controllers/eventsController';
 
-const router = Router({ mergeParams: true });
+const router = new Hono();
 
 router.post('/', registerUserForEvent);
 router.delete('/', unregisterUserFromEvent);

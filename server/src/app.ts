@@ -1,63 +1,41 @@
-import { toNodeHandler } from 'better-auth/node';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express from 'express';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { HTTPException } from 'hono/http-exception';
+import { logger } from 'hono/logger';
 
 import routes from '@/api/routes';
-import { errorHandler, logAtLevel } from '@/middleware';
 
 import { auth } from './lib/auth';
 
-const app = express();
-
-/* ---- Security Middlewares ---- */
-app.use(helmet());
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // max 1000 requests per IP
-});
-
-app.use(limiter);
-
-app.use(cookieParser());
-
-/* ---- Authentication ---- */
-app.all('/api/auth/{*any}', toNodeHandler(auth));
-
-/* ---- Utility Middlewares ---- */
-app.use(express.json());
+const app = new Hono();
 
 /* ---- Logging Middleware ---- */
-app.use(logAtLevel(4));
+app.use(logger());
 
 /* ---- CORS configuration ---- */
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',');
-
 app.use(
+  '/api/*',
   cors({
-    // Dynamically validate Origin so ACAO matches the requesting site when allowed.
-    origin: (origin, callback) => {
-      // allow non-browser/SSR requests (no origin) and any whitelisted origin
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin ?? true);
-      } else {
-        callback(new Error(`CORS: origin ${origin} not allowed`));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (process.env.CORS_ORIGIN || 'http://localhost:3000').split(','),
+    allowHeaders: ['Content-Type', 'Authorization'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-    optionsSuccessStatus: 204,
   }),
 );
 
+/* ---- Authentication ---- */
+app.on(['POST', 'GET'], '/api/auth/*', (c) => auth.handler(c.req.raw));
+
 /* ---- Routes ---- */
-app.use('/api', routes); // Main API routes
+app.route('/api', routes); // Main API routes
 
 /* ---- Error Handling Middlewares ---- */
-app.use(errorHandler);
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return c.json({ error: err.message }, err.status);
+  }
+
+  return c.json({ error: 'Internal Server Error' }, 500);
+});
 
 export default app;

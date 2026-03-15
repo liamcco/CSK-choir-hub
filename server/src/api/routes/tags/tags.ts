@@ -1,12 +1,11 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { createTag, deleteTag, getTags } from '@/api/controllers/tagsController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getTags);
-router.post('/', requireAuth({ groups: ['Admins'] }), createTag);
-router.delete('/:id', requireAuth({ groups: ['Admins'] }), deleteTag);
+router.post('/', createTag);
+router.delete('/:id', deleteTag);
 
 export default router;

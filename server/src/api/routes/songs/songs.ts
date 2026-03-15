@@ -1,15 +1,14 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { createSong, deleteSong, getSongs } from '@/api/controllers/songsController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
 import tagsRoutes from './tags';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getSongs);
-router.post('/', requireAuth({ groups: ['Admins'] }), createSong);
-router.delete('/:songId', requireAuth({ groups: ['Admins'] }), deleteSong);
+router.post('/', createSong);
+router.delete('/:songId', deleteSong);
 
 router.use('/songId/tags', tagsRoutes);
 

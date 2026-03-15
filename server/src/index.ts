@@ -1,3 +1,4 @@
+import { serve } from '@hono/node-server';
 import dotenv from 'dotenv';
 
 import { prisma } from '@/db';
@@ -7,32 +8,27 @@ import app from './app';
 dotenv.config();
 
 // Server port
-const PORT = process.env.PORT || 5050;
+const PORT = parseInt(process.env.PORT ?? '', 10) || 5050;
 
-const startServer = async () => {
-  try {
-    await prisma.$connect();
-    console.log('Connected to PostgreSQL via Prisma');
+const server = serve({
+  fetch: app.fetch,
+  port: PORT,
+});
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error('Database connection error:', err);
-    process.exit(1);
-  }
-};
-
-// Graceful shutdown
+// graceful shutdown
 process.on('SIGINT', async () => {
   await prisma.$disconnect();
+  server.close();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
   await prisma.$disconnect();
-  process.exit(0);
+  server.close((err) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    process.exit(0);
+  });
 });
-
-// Start the server
-startServer();

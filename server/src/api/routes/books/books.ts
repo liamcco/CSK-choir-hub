@@ -1,18 +1,17 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { createBook, deleteBook, getBookWithId, getBooks } from '@/api/controllers/booksController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
 import songsRouter from './songs';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getBooks);
-router.post('/', requireAuth({ groups: ['Admins'] }), createBook);
+router.post('/', createBook);
 
 router.get('/:bookId', getBookWithId);
-router.delete('/:bookId', requireAuth({ groups: ['Admins'] }), deleteBook);
+router.delete('/:bookId', deleteBook);
 
-router.use('/:bookId/songs', songsRouter);
+router.route('/:bookId/songs', songsRouter);
 
 export default router;

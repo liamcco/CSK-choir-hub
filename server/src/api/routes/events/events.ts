@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import {
   createEvent,
@@ -7,21 +7,20 @@ import {
   getEvents,
   updateEvent,
 } from '@/api/controllers/eventsController';
-import { requireAuth } from '@/middleware/authMiddleware';
 
 import attendanceRoutes from './attendance';
 import registrationRoutes from './registrations';
 
-const router = Router();
+const router = new Hono();
 
 router.get('/', getEvents);
-router.post('/', requireAuth({ groups: ['Admins'] }), createEvent);
+router.post('/', createEvent);
 
 router.get('/:id', getEventDetail);
-router.put('/:id', requireAuth({ groups: ['Admins'] }), updateEvent);
-router.delete('/:id', requireAuth({ groups: ['Admins'] }), deleteEvent);
+router.put('/:id', updateEvent);
+router.delete('/:id', deleteEvent);
 
-router.use('/:id/attendances', attendanceRoutes);
-router.use('/:id/registrations', registrationRoutes);
+router.route('/:id/attendances', attendanceRoutes);
+router.route('/:id/registrations', registrationRoutes);
 
 export default router;

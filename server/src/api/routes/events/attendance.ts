@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Hono } from 'hono';
 
 import { updateUserAttendance } from '@/api/controllers/eventsController';
 
-const router = Router({ mergeParams: true });
+const router = new Hono();
 
 router.put('/', updateUserAttendance);
 
