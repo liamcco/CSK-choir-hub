@@ -7,8 +7,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '1',
       email: 'alice@example.com',
-      username: 'alice',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Alice Alto',
       dietaryPreferences: 'Vegetarian',
     },
@@ -18,8 +16,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '2',
       email: 'bob@example.com',
-      username: 'bob',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Bob Bass',
     },
   });
@@ -28,8 +24,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '3',
       email: 'charles@example.com',
-      username: 'charles',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Charles Capo',
     },
   });
@@ -38,8 +32,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '4',
       email: 'diana@example.com',
-      username: 'diana',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Diana Diva',
       dietaryPreferences: 'Vegan',
     },
@@ -49,8 +41,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '5',
       email: 'evan@example.com',
-      username: 'evan',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Evan Echo',
     },
   });
@@ -59,8 +49,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '6',
       email: 'fred@example.com',
-      username: 'fred',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Fred Fermata',
     },
   });
@@ -69,8 +57,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '7',
       email: 'george@example.com',
-      username: 'george',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'George Guitar',
     },
   });
@@ -79,8 +65,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '8',
       email: 'helen@example.com',
-      username: 'helen',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Helen Harmony',
       dietaryPreferences: 'Gluten-Free',
     },
@@ -90,8 +74,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '9',
       email: 'liam@example.com',
-      username: 'liam',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Liam Lyric',
     },
   });
@@ -100,8 +82,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '10',
       email: 'lucas@example.com',
-      username: 'lucas',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Lucas Lyric',
     },
   });
@@ -110,8 +90,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '11',
       email: 'isak@example.com',
-      username: 'isak',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Isak Inspiration',
     },
   });
@@ -120,8 +98,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '12',
       email: 'elin@example.com',
-      username: 'elin',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Elin Elegance',
     },
   });
@@ -130,8 +106,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '13',
       email: 'ellen@example.com',
-      username: 'ellen',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Ellen Elegance',
     },
   });
@@ -140,8 +114,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '14',
       email: 'elinor@example.com',
-      username: 'elinor',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Elinor Elegance',
     },
   });
@@ -150,8 +122,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '15',
       email: 'ingrid@example.com',
-      username: 'ingrid',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Ingrid Inspiration',
     },
   });
@@ -160,8 +130,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '16',
       email: 'vera@example.com',
-      username: 'vera',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Vera Vocal',
     },
   });
@@ -170,8 +138,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '17',
       email: 'hilding@example.com',
-      username: 'hilding',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Hilding Harmony',
     },
   });
@@ -180,8 +146,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '18',
       email: 'felix@example.com',
-      username: 'felix',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Felix Forte',
     },
   });
@@ -190,8 +154,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '19',
       email: 'linn@example.com',
-      username: 'linn',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Linn Lyric',
     },
   });
@@ -200,8 +162,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '20',
       email: 'thore@example.com',
-      username: 'thore',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Thore Tenor',
     },
   });
@@ -210,8 +170,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '21',
       email: 'rebekka@example.com',
-      username: 'rebekka',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Rebekka Rhapsody',
     },
   });
@@ -220,8 +178,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '22',
       email: 'robert@example.com',
-      username: 'robert',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Robert Rhapsody',
     },
   });
@@ -230,8 +186,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '23',
       email: 'julia@example.com',
-      username: 'julia',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Julia Jazz',
     },
   });
@@ -240,8 +194,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '24',
       email: 'mathias@example.com',
-      username: 'mathias',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Mathias Melody',
     },
   });
@@ -250,8 +202,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '25',
       email: 'elisabeth@example.com',
-      username: 'elisabeth',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Elisabeth Elegance',
     },
   });
@@ -260,8 +210,6 @@ export default async function seedUsers(prisma: PrismaClient): Promise<Users> {
     data: {
       id: '26',
       email: 'maria@example.com',
-      username: 'maria',
-      passwordHash: await bcrypt.hash('password', 10),
       name: 'Maria Melody',
     },
   });
