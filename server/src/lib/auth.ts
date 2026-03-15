@@ -19,4 +19,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  experimental: {
+    joins: true, // Enable database joins for better performance
+  },
 });
