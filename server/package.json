@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun src/index.ts",
+    "start": "node dist/index.ts",
+    "build": "tsc && tsc-alias",
     "dev": "bun --hot src/index.ts",
     "openapi-ts": "openapi-ts",
     "generate-prisma-client": "npx prisma generate",

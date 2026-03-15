@@ -10,6 +10,6 @@ router.get('/', getSongs);
 router.post('/', createSong);
 router.delete('/:songId', deleteSong);
 
-router.use('/songId/tags', tagsRoutes);
+router.route('/songId/tags', tagsRoutes);
 
 export default router;
