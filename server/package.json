@@ -2,7 +2,7 @@
   "name": "choir-hub-server",
   "version": "1.0.0",
   "description": "Backend server for Choir Hub application",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
     "start": "bun dist/index.js",
