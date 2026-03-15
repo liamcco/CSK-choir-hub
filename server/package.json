@@ -8,7 +8,7 @@
     "start": "bun dist/index.js",
     "dev": "bun --hot src/index.ts",
     "openapi-ts": "openapi-ts",
-    "build": "tsc && tsc-alias -f -fe .js",
+    "build": "tsc && tsc-alias",
     "generate-prisma-client": "npx prisma generate",
     "run-db": "docker-compose up -d",
     "migrate-db": "prisma migrate dev --name init",
