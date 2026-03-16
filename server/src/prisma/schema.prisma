@@ -308,9 +308,6 @@ model BookSong {
   pageStart Int?
   pageEnd   Int?
 
-  // Optional: preserve ordering of songs within a book
-  order Int?
-
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
   song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
 

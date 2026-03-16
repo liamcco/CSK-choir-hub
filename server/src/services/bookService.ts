@@ -2,7 +2,7 @@ import { bookModel } from '@/db';
 import { NotFoundError } from '@/utils/errors';
 
 export async function getAllBooks() {
-  return await bookModel.findAll();
+  return await bookModel.getAllBooks();
 }
 
 export async function getBookById(bookId: string) {
@@ -13,12 +13,12 @@ export async function getBookById(bookId: string) {
   return book;
 }
 
-export async function createBook(data: { title: string }) {
-  return await bookModel.create(data);
+export async function createBook(title: string) {
+  return await bookModel.create(title);
 }
 
 export async function deleteBook(bookId: string) {
-  await bookModel.deleteById(bookId);
+  await bookModel.deleteBook(bookId);
 }
 
 export async function addSongToBook(bookId: string, songId: string) {

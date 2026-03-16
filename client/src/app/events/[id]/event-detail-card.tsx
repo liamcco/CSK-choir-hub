@@ -68,9 +68,7 @@ export async function EventDetailCard({ eventId }: { eventId: string }) {
                 <AccordionContent>
                   {event.registrations?.map((reg) => (
                     <div key={reg.userId} className="flex items-center justify-between">
-                      <span>
-                        {reg.firstName} {reg.lastName}
-                      </span>
+                      <span>{reg.name}</span>
                     </div>
                   ))}
                 </AccordionContent>

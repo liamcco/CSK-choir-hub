@@ -27,7 +27,7 @@ export const createBook = async (c: Context) => {
 
   if (!title) throw new BadRequestError('Title is required');
 
-  const newBook = await bookService.createBook({ title });
+  const newBook = await bookService.createBook(title);
 
   return c.json({ book: newBook }, 201);
 };

@@ -1,26 +1,26 @@
 import { prisma } from '@/db';
-import { type Prisma } from '@/prisma/generated/client';
 
 /**
  * Create a new song in the database.
- * @param data Book creation data (title, author, etc.)
+ * @param title Title of the book
  */
-export async function create(data: Prisma.BookCreateInput) {
-  return prisma.book.create({ data });
+export async function create(title: string) {
+  return prisma.book.create({ data: { title } });
 }
 
 /**
  * Delete a book by its ID.
  * @param id Book ID
  */
-export async function deleteById(bookId: string) {
+export async function deleteBook(bookId: string) {
   return prisma.book.delete({ where: { id: bookId } });
 }
 
 /**
  * List books
+ * @param includeSongs Whether to include associated songs in the result
  */
-export async function findAll() {
+export async function getAllBooks() {
   return prisma.book.findMany();
 }
 
@@ -33,8 +33,10 @@ export async function findById(bookId: string) {
     where: { id: bookId },
     include: {
       bookSongs: {
-        include: {
-          song: true,
+        select: {
+          songId: true,
+          pageStart: true,
+          pageEnd: true,
         },
       },
     },

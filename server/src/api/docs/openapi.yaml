@@ -107,12 +107,16 @@ components:
       $ref: './components.yaml#/schemas/Role'
 
     # Music catalog
+    BookSummary:
+      $ref: './components.yaml#/schemas/BookSummary'
     Book:
       $ref: './components.yaml#/schemas/Book'
-    Song:
-      $ref: './components.yaml#/schemas/Song'
+    CreateBookInput:
+      $ref: './components.yaml#/schemas/CreateBookInput'
     BookSong:
       $ref: './components.yaml#/schemas/BookSong'
+    Song:
+      $ref: './components.yaml#/schemas/Song'
     Tag:
       $ref: './components.yaml#/schemas/Tag'
     SongKnowledge:

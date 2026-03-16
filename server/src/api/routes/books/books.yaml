@@ -17,12 +17,12 @@ paths:
                   books:
                     type: array
                     items:
-                      $ref: '../../docs/openapi.yaml#/components/schemas/Book'
+                      $ref: '../../docs/openapi.yaml#/components/schemas/BookSummary'
     post:
       tags:
         - books
       summary: Create book
-      description: Creates a new book (Admins only).
+      description: Creates a new book.
       operationId: createBook
       requestBody:
         description: Book to create
@@ -45,7 +45,7 @@ paths:
                 type: object
                 properties:
                   book:
-                    $ref: '../../docs/openapi.yaml#/components/schemas/Book'
+                    $ref: '../../docs/openapi.yaml#/components/schemas/CreateBookInput'
 
   /books/{bookId}:
     parameters:
@@ -76,7 +76,7 @@ paths:
       tags:
         - books
       summary: Delete book
-      description: Deletes a book by ID (Admins only).
+      description: Deletes a book by ID.
       operationId: deleteBook
       responses:
         '204':
@@ -95,7 +95,7 @@ paths:
       tags:
         - books
       summary: Add song to book
-      description: Adds a song to the specified book (Admins only).
+      description: Adds a song to the specified book.
       operationId: addSongToBook
       requestBody:
         description: Song to add
@@ -111,7 +111,7 @@ paths:
               required:
                 - songId
       responses:
-        '204':
+        '201':
           description: Song added to book
 
   /books/{bookId}/songs/{songId}:
@@ -134,7 +134,7 @@ paths:
       tags:
         - books
       summary: Remove song from book
-      description: Removes a song from the specified book (Admins only).
+      description: Removes a song from the specified book.
       operationId: removeSongFromBook
       responses:
         '204':
