@@ -170,6 +170,12 @@ schemas:
       songId:
         type: string
         format: uuid
+      song:
+        type: object
+        properties:
+          title:
+            type: string
+            example: Island
       pageStart:
         type: integer
         example: 50
@@ -178,7 +184,7 @@ schemas:
         example: 55
     required:
       - songId
-
+      - title
   Song:
     type: object
     properties:

@@ -34,9 +34,14 @@ export async function findById(bookId: string) {
     include: {
       bookSongs: {
         select: {
-          songId: true,
           pageStart: true,
           pageEnd: true,
+          songId: true,
+          song: {
+            select: {
+              title: true,
+            },
+          },
         },
       },
     },
