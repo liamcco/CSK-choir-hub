@@ -1,11 +1,19 @@
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
+import { authClient } from '@/lib/auth-client';
 import { subtitle, title } from '@/styles/primitives';
 
-export default function IndexPage() {
-  const t = useTranslations();
+export default async function IndexPage() {
+  const t = await getTranslations();
+  const session = await authClient.getSession({ fetchOptions: { headers: await headers() } });
+
+  if (!session.data?.session) {
+    redirect('/login');
+  }
+
+  const email = session.data?.user.email || 'Guest';
 
   return (
     <>
@@ -22,18 +30,7 @@ export default function IndexPage() {
       <section className="flex h-full w-full items-center justify-center">
         {/* Link to all events and next event */}
         <div className="flex max-w-xl flex-col justify-center gap-4 text-center">
-          <Link href="/events" className="text-lg font-medium text-violet-500 hover:underline">
-            <Button>{'Visa Alla Event'}</Button>
-          </Link>
-          <Link href="/events/1" className="text-lg font-medium text-violet-500 hover:underline">
-            <Button>{'Visa Nästa Event'}</Button>
-          </Link>
-          <Link
-            href="/events/create"
-            className="text-lg font-medium text-violet-500 hover:underline"
-          >
-            <Button>{'Skapa Event'}</Button>
-          </Link>
+          <h1>Hello, {email}!</h1>
         </div>
       </section>
     </>

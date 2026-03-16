@@ -8,26 +8,31 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  role String?
-	banned Boolean?
-	banReason String?
-	banExpires DateTime?
-  sessions      Session[]
-  accounts      Account[]
-  members       Member[]
-  invitations   Invitation[]
+  id                 String       @id
+  name               String
+  email              String
+  emailVerified      Boolean      @default(false)
+  image              String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  username           String?
+  displayUsername    String?
+  role               String?
+  banned             Boolean?     @default(false)
+  banReason          String?
+  banExpires         DateTime?
+  twoFactorEnabled   Boolean?     @default(false)
+  dietaryPreferences String?
+  sessions           Session[]
+  accounts           Account[]
+  members            Member[]
+  invitations        Invitation[]
+  twofactors         TwoFactor[]
+  passkeys           Passkey[]
 
   @@unique([email])
+  @@unique([username])
   @@map("user")
-
-  dietaryPreferences String?
 
   groups Group[]
   roles  Role[]
@@ -130,6 +135,37 @@ model Invitation {
   @@map("invitation")
 }
 
+model TwoFactor {
+  id          String @id
+  secret      String
+  backupCodes String
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([secret])
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+model Passkey {
+  id           String    @id
+  name         String?
+  publicKey    String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime?
+  aaguid       String?
+
+  @@index([userId])
+  @@index([credentialID])
+  @@map("passkey")
+}
+
 
 enum GroupType {
   CHOIR
@@ -154,6 +190,8 @@ model Group {
 
   parents  Group[] @relation("GroupHierarchy")
   children Group[] @relation("GroupHierarchy")
+
+  @@map("group")
 }
 
 model Role {
@@ -167,6 +205,8 @@ model Role {
 
   user   User? @relation(fields: [id], references: [id])
   userId String?
+
+  @@map("role")
 }
 
 enum EventType {
@@ -195,6 +235,8 @@ model Event {
 
   attendances   EventAttendance[]
   registrations EventRegistration[]
+
+  @@map("event")
 }
 
 enum AttendanceStatus {
@@ -213,6 +255,7 @@ model EventAttendance {
   @@id([userId, eventId])
   @@index([eventId])
   @@index([userId])
+  @@map("eventAttendance")
 }
 
 model EventRegistration {
@@ -229,6 +272,7 @@ model EventRegistration {
   @@id([userId, eventId])
   @@index([eventId])
   @@index([userId])
+  @@map("eventRegistration")
 }
 
 model Book {
@@ -238,6 +282,7 @@ model Book {
   updatedAt DateTime @updatedAt
 
   bookSongs BookSong[]
+  @@map("book")
 }
 
 model Song {
@@ -253,6 +298,7 @@ model Song {
   voices        Voice[]
   tags          Tag[]
   songKnowledge SongKnowledge[]
+  @@map("song")
 }
 
 model BookSong {
@@ -271,6 +317,7 @@ model BookSong {
   @@id([bookId, songId])
   @@index([songId])
   @@index([bookId])
+  @@map("bookSong")
 }
 
 enum KnowledgeLevel {
@@ -292,6 +339,7 @@ model SongKnowledge {
   @@id([userId, songId, voice])
   @@index([songId])
   @@index([userId])
+  @@map("songKnowledge")
 }
 
 model Tag {
@@ -301,6 +349,7 @@ model Tag {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("tag")
 }
 
 enum Voice {

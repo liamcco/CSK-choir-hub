@@ -1,21 +1,24 @@
 'use client';
 
-import { useActionState } from 'react';
-
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 import { cn } from '@/utils/ui/utils';
-
-import { type FormState, signin } from './actions';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const t = useTranslations();
-  const initialState: FormState = {};
-  const [state, formAction, pending] = useActionState(signin, initialState);
+
+  const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+    await authClient.signIn.email({ email: username, password });
+  };
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -25,22 +28,18 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <CardDescription>Enter your username and password below</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction}>
+          <form onSubmit={handleSignin}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input id="username" type="text" name="username" placeholder="johndoe" />
-                {state?.errors?.username && <p>{state.errors.username}</p>}
               </Field>
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input id="password" type="password" name="password" />
-                {state?.errors?.password && <p>{state.errors.password}</p>}
               </Field>
               <Field>
-                <Button type="submit" disabled={pending}>
-                  Login
-                </Button>
+                <Button type="submit">Login</Button>
               </Field>
             </FieldGroup>
           </form>

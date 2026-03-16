@@ -1,13 +1,6 @@
-import { cookies } from 'next/headers';
-
-import { type Auth, type CreateClientConfig } from '@/lib/api-client/client';
+import { type CreateClientConfig } from '@/lib/api-client/client';
 
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,
   baseUrl: process.env.API_BASE_URL,
-  auth: async (auth: Auth) => {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-    return token;
-  },
 });
