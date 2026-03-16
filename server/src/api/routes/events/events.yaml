@@ -53,8 +53,8 @@ paths:
         description: ID of the event
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     get:
       tags:
         - events
@@ -133,8 +133,8 @@ paths:
         description: ID of the event
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - events
@@ -171,8 +171,8 @@ paths:
               type: object
               properties:
                 userId:
-                  type: integer
-                  format: int64
+                  type: string
+                  format: uuid
               required:
                 - userId
       responses:
@@ -186,8 +186,8 @@ paths:
         description: ID of the event
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     put:
       tags:
         - events

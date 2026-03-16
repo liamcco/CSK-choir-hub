@@ -16,7 +16,7 @@ import {
 import { getEventById } from '@/lib/api-client';
 import { formatEventDateRange } from '@/utils/date-utils';
 
-export async function EventDetailCard({ eventId }: { eventId: number }) {
+export async function EventDetailCard({ eventId }: { eventId: string }) {
   const res = await getEventById({ path: { eventId } });
 
   if (!res.data) {

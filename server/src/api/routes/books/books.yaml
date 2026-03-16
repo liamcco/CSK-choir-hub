@@ -54,8 +54,8 @@ paths:
         description: ID of the book
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     get:
       tags:
         - books
@@ -89,8 +89,8 @@ paths:
         description: ID of the book
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - books
@@ -106,8 +106,8 @@ paths:
               type: object
               properties:
                 songId:
-                  type: integer
-                  format: int64
+                  type: string
+                  format: uuid
               required:
                 - songId
       responses:
@@ -121,15 +121,15 @@ paths:
         description: ID of the book
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
       - name: songId
         in: path
         description: ID of the song
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     delete:
       tags:
         - books

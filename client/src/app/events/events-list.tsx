@@ -1,17 +1,11 @@
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getEvents } from '@/lib/api-client';
-import type { Auth } from '@/lib/api-client/client';
 import { formatEventDateRange } from '@/utils/date-utils';
 
 export async function EventsList() {
-  const response = await getEvents({
-    auth: async (auth: Auth) => {
-      return (await cookies()).get('better-auth-session-token')?.value;
-    },
-  });
+  const response = await getEvents();
 
   if (response.data === undefined) {
     return <p>Could not load events.</p>;

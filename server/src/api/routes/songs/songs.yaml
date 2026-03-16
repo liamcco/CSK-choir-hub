@@ -49,8 +49,8 @@ paths:
         required: true
         description: ID of the song
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     delete:
       tags:
         - songs
@@ -68,8 +68,8 @@ paths:
         required: true
         description: ID of the song
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     post:
       tags:
         - songs
@@ -84,8 +84,8 @@ paths:
               type: object
               properties:
                 tagId:
-                  type: integer
-                  format: int64
+                  type: string
+                  format: uuid
               required:
                 - tagId
       responses:
@@ -105,8 +105,8 @@ paths:
               type: object
               properties:
                 tagId:
-                  type: integer
-                  format: int64
+                  type: string
+                  format: uuid
               required:
                 - tagId
       responses:

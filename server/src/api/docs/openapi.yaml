@@ -1,4 +1,3 @@
----
 # CSK Choir Hub API declaration (OpenAPI 3.0.4)
 openapi: 3.2.0
 
@@ -77,10 +76,6 @@ paths:
 components:
   # Reusable schemas
   schemas:
-    # Users & auth
-    User:
-      $ref: './components.yaml#/schemas/User'
-
     # Events
     CSKEventType:
       $ref: './components.yaml#/schemas/CSKEventType'

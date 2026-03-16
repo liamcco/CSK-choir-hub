@@ -52,8 +52,8 @@ paths:
         required: true
         description: ID of the tag
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
     delete:
       tags:
         - tags

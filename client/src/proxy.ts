@@ -12,7 +12,7 @@ export async function proxy(req: NextRequest) {
 
   if (isPublic) return NextResponse.next();
 
-  const token = req.cookies.get('token')?.value;
+  const token = req.cookies.get('better-auth.session_token')?.value;
 
   // No token: send to login with return URL
   if (!token) {
