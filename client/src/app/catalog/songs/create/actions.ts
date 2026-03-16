@@ -53,5 +53,5 @@ export async function createSongAction(
     };
   }
 
-  redirect('/songs');
+  redirect('/catalog/songs');
 }

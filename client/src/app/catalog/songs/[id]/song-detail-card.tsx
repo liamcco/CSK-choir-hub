@@ -1,27 +1,46 @@
 import Link from 'next/link';
 
-import { buttonVariants } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getSongById } from '@/lib/api-client';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { getSongById, getTags } from '@/lib/api-client';
 import { cn } from '@/utils/ui/utils';
 
-export async function SongDetailCard({ songId }: { songId: string }) {
-  const response = await getSongById({ path: { songId } });
+import { AddSongTagForm } from './add-song-tag-form';
 
-  if (!response.data?.song) {
+export async function SongDetailCard({ songId }: { songId: string }) {
+  const [songResponse, tagsResponse] = await Promise.all([
+    getSongById({ path: { songId } }),
+    getTags(),
+  ]);
+
+  if (!songResponse.data?.song) {
     return <p>Error loading song details.</p>;
   }
 
-  const song = response.data.song;
+  const song = songResponse.data.song;
+  const allTags = tagsResponse.data?.tags ?? [];
+  const assignedTagIds = new Set((song.tags ?? []).map((tag) => tag.id));
+  const availableTags = allTags.filter((tag) => !assignedTagIds.has(tag.id));
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <Link href="/songs" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'w-fit')}>
-          Back to songs
+        <Link href="/catalog/songs">
+          <Button className="w-fit" size="sm" variant="ghost">
+            Back to songs
+          </Button>
         </Link>
-        <Link href="/songs/create" className={cn(buttonVariants({ size: 'sm' }), 'w-fit')}>
-          Create song
+        <Link href="/catalog/songs/create">
+          <Button className="w-fit" size="sm">
+            Create song
+          </Button>
         </Link>
       </div>
 
@@ -42,7 +61,9 @@ export async function SongDetailCard({ songId }: { songId: string }) {
               <p className="break-all">{song.id}</p>
             </div>
             <div>
-              <p className="text-muted-foreground text-xs uppercase tracking-wide">Starting tones</p>
+              <p className="text-muted-foreground text-xs uppercase tracking-wide">
+                Starting tones
+              </p>
               <p>{song.startingTones || 'Not set'}</p>
             </div>
           </div>
@@ -50,7 +71,9 @@ export async function SongDetailCard({ songId }: { songId: string }) {
           <div className="space-y-3">
             <h2 className="text-sm font-medium">Tags</h2>
             {!song.tags || song.tags.length === 0 ? (
-              <p className="text-muted-foreground text-sm">No tags have been assigned to this song.</p>
+              <p className="text-muted-foreground text-sm">
+                No tags have been assigned to this song.
+              </p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {song.tags.map((tag) => (
@@ -59,6 +82,15 @@ export async function SongDetailCard({ songId }: { songId: string }) {
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-sm font-medium">Add tag</h2>
+            {tagsResponse.data === undefined ? (
+              <p className="text-muted-foreground text-sm">Could not load available tags.</p>
+            ) : (
+              <AddSongTagForm songId={song.id} availableTags={availableTags} />
             )}
           </div>
         </CardContent>

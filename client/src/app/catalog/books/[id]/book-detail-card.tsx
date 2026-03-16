@@ -47,12 +47,12 @@ export async function BookDetailCard({ bookId }: { bookId: string }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <Link href="/books">
+        <Link href="catalog/books">
           <Button className="w-fit" size="sm" variant="ghost">
             Back to books
           </Button>
         </Link>
-        <Link href="/books/create">
+        <Link href="catalog/books/create">
           <Button className="w-fit" size="sm">
             Create book
           </Button>

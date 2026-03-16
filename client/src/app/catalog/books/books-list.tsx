@@ -29,7 +29,7 @@ export async function BooksList() {
             Browse the choir&apos;s song books and open each book for its contents.
           </p>
         </div>
-        <Link href="/books/create">
+        <Link href="/catalog/books/create">
           <Button className="w-fit" size="sm">
             Create new book
           </Button>
@@ -46,7 +46,7 @@ export async function BooksList() {
       ) : (
         <div className="flex flex-col gap-4">
           {books.map((book) => (
-            <Link key={book.id} href={`/books/${book.id}`}>
+            <Link key={book.id} href={`catalog/books/${book.id}`}>
               <Card className="hover:bg-muted/30 transition-colors">
                 <CardHeader>
                   <CardTitle>{book.title}</CardTitle>

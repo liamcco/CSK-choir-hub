@@ -19,7 +19,10 @@ export function CreateSongForm({ className, ...props }: React.ComponentProps<'di
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Link href="/songs" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'w-fit')}>
+      <Link
+        href="/catalog/songs"
+        className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'w-fit')}
+      >
         Back to songs
       </Link>
       <Card className="w-full max-w-2xl">

@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getSongs } from '@/lib/api-client';
-import { cn } from '@/utils/ui/utils';
 
 function formatTagSummary(tags?: Array<{ name: string }>) {
   if (!tags || tags.length === 0) {
@@ -31,7 +30,7 @@ export async function SongsList() {
             Browse the song catalog and open individual songs for details.
           </p>
         </div>
-        <Link href="/songs/create">
+        <Link href="/catalog/songs/create">
           <Button className="w-fit" size="sm">
             Create song
           </Button>
@@ -48,7 +47,7 @@ export async function SongsList() {
       ) : (
         <div className="flex flex-col gap-4">
           {songs.map((song) => (
-            <Link key={song.id} href={`/songs/${song.id}`}>
+            <Link key={song.id} href={`/catalog/songs/${song.id}`}>
               <Card className="hover:bg-muted/30 transition-colors">
                 <CardHeader>
                   <CardTitle>{song.title}</CardTitle>
