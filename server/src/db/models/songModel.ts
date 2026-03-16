@@ -22,7 +22,12 @@ export async function findAll() {
  * @param id Song ID
  */
 export async function findById(songId: string) {
-  return prisma.song.findUnique({ where: { id: songId } });
+  return prisma.song.findUnique({
+    where: { id: songId },
+    include: {
+      tags: true,
+    },
+  });
 }
 
 /**

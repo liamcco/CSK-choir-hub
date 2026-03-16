@@ -7,23 +7,34 @@ import { BadRequestError } from '@/utils/errors';
 export const getSongs = async (c: Context) => {
   const songs = await songService.getAllSongs();
 
-  c.json({ songs });
+  return c.json({ songs });
+};
+
+// Get a song by ID
+export const getSongById = async (c: Context) => {
+  const songId = c.req.param('songId');
+
+  if (!songId) throw new BadRequestError('Invalid song ID');
+
+  const song = await songService.getSongById(songId);
+
+  return c.json({ song });
 };
 
 // Create a new song
 export const createSong = async (c: Context) => {
-  const { title } = await c.req.json();
+  const { title, startingTones } = await c.req.json();
 
   if (!title) throw new BadRequestError('Song title is required');
 
-  const newSong = await songService.createSong({ title });
+  const newSong = await songService.createSong({ title, startingTones });
 
   return c.json(newSong, 201);
 };
 
 // Delete a song by ID
 export const deleteSong = async (c: Context) => {
-  const songId = c.req.param('id');
+  const songId = c.req.param('songId');
 
   if (!songId) throw new BadRequestError('Invalid song ID');
 

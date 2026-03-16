@@ -28,12 +28,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-                - name
+              $ref: '../../docs/openapi.yaml#/components/schemas/CreateSongInput'
       responses:
         '201':
           description: Song created
@@ -51,6 +46,22 @@ paths:
         schema:
           type: string
           format: uuid
+    get:
+      tags:
+        - songs
+      summary: Get song
+      description: Returns a song by ID.
+      operationId: getSongById
+      responses:
+        '200':
+          description: Song fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  song:
+                    $ref: '../../docs/openapi.yaml#/components/schemas/Song'
     delete:
       tags:
         - songs

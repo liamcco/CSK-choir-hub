@@ -1,4 +1,5 @@
 import { songModel, tagModel } from '@/db';
+import { NotFoundError } from '@/utils/errors';
 
 /**
  * Gets all songs in the database.
@@ -13,7 +14,7 @@ export async function getAllSongs() {
  * @param data Data for the new song
  * @returns The created song
  */
-export async function createSong(data: { title: string }) {
+export async function createSong(data: { title: string; startingTones?: string }) {
   return await songModel.createSong(data);
 }
 
@@ -31,7 +32,11 @@ export async function deleteSong(songId: string) {
  * @returns The song with the given ID
  */
 export async function getSongById(songId: string) {
-  return await songModel.findById(songId);
+  const song = await songModel.findById(songId);
+
+  if (!song) throw new NotFoundError('Song not found');
+
+  return song;
 }
 
 /**

@@ -113,6 +113,8 @@ components:
       $ref: './components.yaml#/schemas/Book'
     CreateBookInput:
       $ref: './components.yaml#/schemas/CreateBookInput'
+    CreateSongInput:
+      $ref: './components.yaml#/schemas/CreateSongInput'
     BookSong:
       $ref: './components.yaml#/schemas/BookSong'
     Song:
