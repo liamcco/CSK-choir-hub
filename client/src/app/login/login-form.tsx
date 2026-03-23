@@ -29,6 +29,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     const response = await authClient.signIn.email({ email: username, password });
 
     if (response.error) {
+      // Handle error (e.g., show a notification)
+      console.error(response.error);
       return;
     }
 
