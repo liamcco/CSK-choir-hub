@@ -7,13 +7,6 @@ import { subtitle, title } from '@/styles/primitives';
 
 export default async function IndexPage() {
   const t = await getTranslations();
-  const session = await authClient.getSession({ fetchOptions: { headers: await headers() } });
-
-  if (!session.data?.session) {
-    redirect('/login');
-  }
-
-  const email = session.data?.user.email || 'Guest';
 
   return (
     <>
@@ -30,7 +23,7 @@ export default async function IndexPage() {
       <section className="flex h-full w-full items-center justify-center">
         {/* Link to all events and next event */}
         <div className="flex max-w-xl flex-col justify-center gap-4 text-center">
-          <h1>Hello, {email}!</h1>
+          <h1>Hello!</h1>
         </div>
       </section>
     </>
