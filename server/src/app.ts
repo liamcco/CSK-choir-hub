@@ -1,4 +1,5 @@
-import { swaggerUI } from '@hono/swagger-ui';
+// import { swaggerUI } from '@hono/swagger-ui';
+import { betterAuthStudio } from 'better-auth-studio/hono';
 import { Context, Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
@@ -6,6 +7,7 @@ import { logger } from 'hono/logger';
 
 // import openApiDoc from '@/api/docs/openapi.bundle.json';
 import routes from '@/api/routes';
+import studioConfig from '@/lib/studio.config';
 
 import { auth } from './lib/auth';
 
@@ -45,6 +47,9 @@ app.use('*', async (c: Context, next) => {
 });
 
 app.on(['POST', 'GET'], '/api/auth/*', (c: Context) => auth.handler(c.req.raw));
+
+// Better Auth Studio routes
+app.on(['POST', 'GET', 'PUT', 'DELETE'], '/api/studio/*', betterAuthStudio(studioConfig));
 
 // Public route for testing
 app.get('/', (c: Context) => c.json({ message: 'Welcome to the CSK Choir Hub API!' }));

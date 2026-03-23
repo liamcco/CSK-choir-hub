@@ -7,51 +7,56 @@ datasource db {
   provider = "postgresql"
 }
 
+/* Better auth */
 model User {
-  id                 String       @id
-  name               String
-  email              String
-  emailVerified      Boolean      @default(false)
-  image              String?
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  username           String?
-  displayUsername    String?
-  role               String?
-  banned             Boolean?     @default(false)
-  banReason          String?
-  banExpires         DateTime?
-  twoFactorEnabled   Boolean?     @default(false)
-  dietaryPreferences String?
-  sessions           Session[]
-  accounts           Account[]
-  members            Member[]
-  invitations        Invitation[]
-  twofactors         TwoFactor[]
-  passkeys           Passkey[]
+  id               String      @id
+  name             String
+  email            String
+  emailVerified    Boolean     @default(false)
+  image            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  username         String?
+  displayUsername  String?
+  role             String?
+  banned           Boolean?    @default(false)
+  banReason        String?
+  banExpires       DateTime?
+  twoFactorEnabled Boolean?    @default(false)
+  sessions         Session[]
+  accounts         Account[]
+  twofactors       TwoFactor[]
+  passkeys         Passkey[]
 
   @@unique([email])
   @@unique([username])
   @@map("user")
 
-  groups Group[]
-  roles  Role[]
+  // RBAC
+  userRoles       UserRole[]
+  userPermissions UserPermission[]
 
+  // Organization
+  groupMemberships GroupMembership[]
+
+  // Application relations
+  createdEvents Event[] @relation("EventCreator")
   attendances   EventAttendance[]
   registrations EventRegistration[]
   songKnowledge SongKnowledge[]
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
 
   @@unique([token])
   @@index([userId])
@@ -90,51 +95,6 @@ model Verification {
   @@map("verification")
 }
 
-model Organization {
-  id          String       @id
-  name        String
-  slug        String
-  logo        String?
-  createdAt   DateTime
-  metadata    String?
-  members     Member[]
-  invitations Invitation[]
-
-  @@unique([slug])
-  @@map("organization")
-}
-
-model Member {
-  id             String       @id
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role           String       @default("member")
-  createdAt      DateTime
-
-  @@index([organizationId])
-  @@index([userId])
-  @@map("member")
-}
-
-model Invitation {
-  id             String       @id
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  email          String
-  role           String?
-  status         String       @default("pending")
-  expiresAt      DateTime
-  createdAt      DateTime     @default(now())
-  inviterId      String
-  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
-
-  @@index([organizationId])
-  @@index([email])
-  @@map("invitation")
-}
-
 model TwoFactor {
   id          String @id
   secret      String
@@ -166,7 +126,7 @@ model Passkey {
   @@map("passkey")
 }
 
-
+/* RBAC and organization */
 enum GroupType {
   CHOIR
   VOICE
@@ -177,38 +137,116 @@ enum GroupType {
 }
 
 model Group {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  name      String    @unique
+  key       String    @unique
+  name      String
   type      GroupType
 
   description String?
 
-  members User[]
-  roles Role[]
+  memberships GroupMembership[]
 
-  parents  Group[] @relation("GroupHierarchy")
-  children Group[] @relation("GroupHierarchy")
+  parentRelations GroupRelation[] @relation("GroupChild")
+  childRelations  GroupRelation[] @relation("GroupParent")
 
   @@map("group")
 }
 
+model GroupRelation {
+  parentId String
+  childId  String
+
+  parent Group @relation("GroupParent", fields: [parentId], references: [id], onDelete: Cascade)
+  child  Group @relation("GroupChild", fields: [childId], references: [id], onDelete: Cascade)
+
+  @@id([parentId, childId])
+  @@index([childId])
+  @@map("groupRelation")
+}
+
 model Role {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  key         String    @unique
+  name        String
   description String?
-  groups      Group[]
 
-  user   User? @relation(fields: [id], references: [id])
-  userId String?
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
 
   @@map("role")
 }
 
+model Permission {
+  id          String           @id @default(uuid())
+  key         String           @unique // e.g. events.read, events.update, events.delete
+  resource    String           // e.g. events
+  action      String           // e.g. read
+  description String?
+
+  rolePermissions RolePermission[]
+  userPermissions UserPermission[]
+
+  @@map("permission")
+}
+
+model UserRole {
+  id          String   @id @default(uuid())
+  userId      String
+  roleId      String
+  grantedAt   DateTime @default(now())
+  expiresAt   DateTime?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([roleId])
+  @@index([userId])
+  @@map("userRole")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role         Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission       @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("rolePermission")
+}
+
+model UserPermission {
+  id            String           @id @default(uuid())
+  userId        String
+  permissionId  String
+  effect        PermissionEffect
+  grantedAt     DateTime         @default(now())
+  expiresAt     DateTime?
+  grantedBy String?
+  reason    String?
+
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission    Permission       @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionId])
+  @@index([permissionId])
+  @@index([userId])
+  @@map("userPermission")
+}
+
+enum PermissionEffect {
+  ALLOW
+  DENY
+}
+
+/* Application models */
+/* Events */
 enum EventType {
   REHEARSAL
   CONCERT
@@ -224,6 +262,8 @@ model Event {
   updatedAt DateTime  @updatedAt
   name      String
   type      EventType
+  createdById String
+  createdBy   User @relation("EventCreator", fields: [createdById], references: [id], onDelete: Cascade)
 
   dateStart   DateTime
   dateEnd     DateTime?
@@ -236,6 +276,7 @@ model Event {
   attendances   EventAttendance[]
   registrations EventRegistration[]
 
+  @@index([createdById])
   @@map("event")
 }
 
@@ -275,6 +316,7 @@ model EventRegistration {
   @@map("eventRegistration")
 }
 
+/* Repertoire management */
 model Book {
   id        String   @id @default(uuid())
   title      String   @unique
@@ -349,6 +391,7 @@ model Tag {
   @@map("tag")
 }
 
+/* Utils */
 enum Voice {
   S
   S1
@@ -368,4 +411,20 @@ enum Choir {
   MK
   DK
   KK
+}
+
+model GroupMembership {
+  userId   String
+  groupId  String
+  joinedAt DateTime @default(now())
+  leftAt   DateTime?
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@index([groupId])
+  @@index([userId])
+  @@map("groupMembership")
+
 }

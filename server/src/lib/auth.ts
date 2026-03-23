@@ -2,7 +2,7 @@ import { dash } from '@better-auth/infra';
 import { passkey } from '@better-auth/passkey';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { emailOTP, organization, twoFactor, username } from 'better-auth/plugins';
+import { emailOTP, twoFactor, username } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins';
 import { openAPI } from 'better-auth/plugins';
 
@@ -24,7 +24,6 @@ export const auth = betterAuth({
   },
   plugins: [
     dash(),
-    organization(),
     username(),
     admin(),
     openAPI(),
@@ -45,14 +44,6 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  user: {
-    additionalFields: {
-      dietaryPreferences: {
-        type: 'string',
-        required: false,
-      },
-    },
-  },
   experimental: {
     joins: true, // Enable database joins for better performance
   },
