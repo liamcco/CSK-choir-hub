@@ -1,4 +1,489 @@
 schemas:
+  GroupType:
+    type: string
+    enum: [CHOIR, VOICE, COMMITTEE, BOARD, CONDUCTORS, OTHER]
+    example: VOICE
+
+  PermissionEffect:
+    type: string
+    enum: [ALLOW, DENY]
+    example: ALLOW
+
+  UserSummary:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+        example: Liam Cotton
+      email:
+        type: string
+        format: email
+      username:
+        type: string
+        nullable: true
+      displayUsername:
+        type: string
+        nullable: true
+      systemRole:
+        type: string
+        nullable: true
+        example: admin
+    required:
+      - id
+      - name
+      - email
+      - username
+      - displayUsername
+      - systemRole
+
+  GroupReference:
+    type: object
+    properties:
+      groupId:
+        type: string
+        format: uuid
+      key:
+        type: string
+        example: tenor
+      name:
+        type: string
+        example: Tenor
+      type:
+        $ref: '#/schemas/GroupType'
+    required:
+      - groupId
+      - key
+      - name
+      - type
+
+  GroupMember:
+    allOf:
+      - $ref: '#/schemas/UserSummary'
+      - type: object
+        properties:
+          joinedAt:
+            type: string
+            format: date-time
+          leftAt:
+            type: string
+            format: date-time
+            nullable: true
+        required:
+          - joinedAt
+          - leftAt
+
+  Group:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      key:
+        type: string
+        example: choir-board
+      name:
+        type: string
+        example: Board
+      type:
+        $ref: '#/schemas/GroupType'
+      description:
+        type: string
+        nullable: true
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      members:
+        type: array
+        items:
+          $ref: '#/schemas/GroupMember'
+      parents:
+        type: array
+        items:
+          $ref: '#/schemas/GroupReference'
+      children:
+        type: array
+        items:
+          $ref: '#/schemas/GroupReference'
+    required:
+      - id
+      - key
+      - name
+      - type
+      - description
+      - createdAt
+      - updatedAt
+      - members
+      - parents
+      - children
+
+  CreateGroupInput:
+    type: object
+    properties:
+      key:
+        type: string
+      name:
+        type: string
+      type:
+        $ref: '#/schemas/GroupType'
+      description:
+        type: string
+    required:
+      - key
+      - name
+      - type
+
+  UpdateGroupInput:
+    type: object
+    properties:
+      key:
+        type: string
+      name:
+        type: string
+      type:
+        $ref: '#/schemas/GroupType'
+      description:
+        type: string
+
+  AddUserToGroupInput:
+    type: object
+    properties:
+      userId:
+        type: string
+    required:
+      - userId
+
+  AddChildGroupInput:
+    type: object
+    properties:
+      childGroupId:
+        type: string
+        format: uuid
+    required:
+      - childGroupId
+
+  RoleReference:
+    type: object
+    properties:
+      roleId:
+        type: string
+        format: uuid
+      key:
+        type: string
+        example: rehearsal-admin
+      name:
+        type: string
+        example: Rehearsal Admin
+      description:
+        type: string
+        nullable: true
+    required:
+      - roleId
+      - key
+      - name
+      - description
+
+  PermissionReference:
+    type: object
+    properties:
+      permissionId:
+        type: string
+        format: uuid
+      key:
+        type: string
+        example: events.update
+      resource:
+        type: string
+        example: events
+      action:
+        type: string
+        example: update
+      description:
+        type: string
+        nullable: true
+    required:
+      - permissionId
+      - key
+      - resource
+      - action
+      - description
+
+  RoleUserAssignment:
+    allOf:
+      - $ref: '#/schemas/UserSummary'
+      - type: object
+        properties:
+          grantedAt:
+            type: string
+            format: date-time
+          expiresAt:
+            type: string
+            format: date-time
+            nullable: true
+        required:
+          - grantedAt
+          - expiresAt
+
+  Role:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      key:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+        nullable: true
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      users:
+        type: array
+        items:
+          $ref: '#/schemas/RoleUserAssignment'
+      permissions:
+        type: array
+        items:
+          $ref: '#/schemas/PermissionReference'
+    required:
+      - id
+      - key
+      - name
+      - description
+      - createdAt
+      - updatedAt
+      - users
+      - permissions
+
+  CreateRoleInput:
+    type: object
+    properties:
+      key:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - key
+      - name
+
+  UpdateRoleInput:
+    type: object
+    properties:
+      key:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+
+  AssignUserToRoleInput:
+    type: object
+    properties:
+      userId:
+        type: string
+      expiresAt:
+        type: string
+        format: date-time
+    required:
+      - userId
+
+  AddPermissionToRoleInput:
+    type: object
+    properties:
+      permissionId:
+        type: string
+        format: uuid
+    required:
+      - permissionId
+
+  PermissionUserGrant:
+    allOf:
+      - $ref: '#/schemas/UserSummary'
+      - type: object
+        properties:
+          effect:
+            $ref: '#/schemas/PermissionEffect'
+          grantedAt:
+            type: string
+            format: date-time
+          expiresAt:
+            type: string
+            format: date-time
+            nullable: true
+          reason:
+            type: string
+            nullable: true
+        required:
+          - effect
+          - grantedAt
+          - expiresAt
+          - reason
+
+  Permission:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      key:
+        type: string
+      resource:
+        type: string
+      action:
+        type: string
+      description:
+        type: string
+        nullable: true
+      roles:
+        type: array
+        items:
+          $ref: '#/schemas/RoleReference'
+      users:
+        type: array
+        items:
+          $ref: '#/schemas/PermissionUserGrant'
+    required:
+      - id
+      - key
+      - resource
+      - action
+      - description
+      - roles
+      - users
+
+  CreatePermissionInput:
+    type: object
+    properties:
+      key:
+        type: string
+      resource:
+        type: string
+      action:
+        type: string
+      description:
+        type: string
+    required:
+      - key
+      - resource
+      - action
+
+  UpdatePermissionInput:
+    type: object
+    properties:
+      key:
+        type: string
+      resource:
+        type: string
+      action:
+        type: string
+      description:
+        type: string
+
+  GrantUserPermissionInput:
+    type: object
+    properties:
+      userId:
+        type: string
+      effect:
+        $ref: '#/schemas/PermissionEffect'
+      expiresAt:
+        type: string
+        format: date-time
+      reason:
+        type: string
+    required:
+      - userId
+      - effect
+
+  AdminUserGroupMembership:
+    allOf:
+      - $ref: '#/schemas/GroupReference'
+      - type: object
+        properties:
+          joinedAt:
+            type: string
+            format: date-time
+          leftAt:
+            type: string
+            format: date-time
+            nullable: true
+        required:
+          - joinedAt
+          - leftAt
+
+  AdminUserRoleAssignment:
+    allOf:
+      - $ref: '#/schemas/RoleReference'
+      - type: object
+        properties:
+          grantedAt:
+            type: string
+            format: date-time
+          expiresAt:
+            type: string
+            format: date-time
+            nullable: true
+        required:
+          - grantedAt
+          - expiresAt
+
+  AdminUserPermissionGrant:
+    allOf:
+      - $ref: '#/schemas/PermissionReference'
+      - type: object
+        properties:
+          effect:
+            $ref: '#/schemas/PermissionEffect'
+          grantedAt:
+            type: string
+            format: date-time
+          expiresAt:
+            type: string
+            format: date-time
+            nullable: true
+          reason:
+            type: string
+            nullable: true
+        required:
+          - effect
+          - grantedAt
+          - expiresAt
+          - reason
+
+  AdminUser:
+    allOf:
+      - $ref: '#/schemas/UserSummary'
+      - type: object
+        properties:
+          groups:
+            type: array
+            items:
+              $ref: '#/schemas/AdminUserGroupMembership'
+          roles:
+            type: array
+            items:
+              $ref: '#/schemas/AdminUserRoleAssignment'
+          permissions:
+            type: array
+            items:
+              $ref: '#/schemas/AdminUserPermissionGrant'
+        required:
+          - groups
+          - roles
+          - permissions
+
   CSKVoice:
     type: string
     enum: [S, A, T, B, S1, S2, A1, A2, T1, T2, B1, B2]
@@ -29,97 +514,6 @@ schemas:
             $ref: '#/schemas/Song'
         required:
           - song
-
-  RoleSummary:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      name:
-        type: string
-        example: ADMIN
-      description:
-        type: string
-        example: Administrator with full access
-    required: [id, name]
-  Role:
-    allOf:
-      - $ref: '#/schemas/RoleSummary'
-      - type: object
-        properties:
-        groups:
-          type: array
-          items:
-            type: string
-            format: uuid
-        user:
-          type: object
-          nullable: true
-          properties:
-            userId:
-              type: string
-              format: uuid
-            name:
-              type: string
-              example: Liam Cotton
-          required:
-            - userId
-            - name
-        required:
-          - groups
-          - user
-
-  GroupType:
-    type: string
-    enum: [VOICE, CHOIR, COMMITTEE, OTHER, CONDUCTORS, BOARD]
-    example: VOICE
-
-  GroupSummary:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      name:
-        type: string
-        example: Tenor
-      type:
-        $ref: '#/schemas/GroupType'
-    required: [id, name, type]
-  Group:
-    allOf:
-      - $ref: '#/schemas/GroupSummary'
-      - type: object
-        properties:
-          description:
-            type: string
-          members:
-            type: array
-            items:
-              type: string
-              format: uuid
-          roles:
-            type: array
-            items:
-              type: string
-              format: uuid
-          parents:
-            type: array
-            items:
-              type: string
-              format: uuid
-          children:
-            type: array
-            items:
-              type: string
-              format: uuid
-
-        required:
-          - members
-          - roles
-          - parents
-          - children
 
   CreateBookInput:
     type: object
@@ -164,6 +558,7 @@ schemas:
       - title
       - createdAt
       - updatedAt
+
   Book:
     allOf:
       - $ref: '#/schemas/BookSummary'
@@ -196,7 +591,8 @@ schemas:
         example: 55
     required:
       - songId
-      - title
+      - song
+
   Song:
     type: object
     properties:
@@ -257,6 +653,7 @@ schemas:
       - place
       - requiresAttendance
       - requiresRegistration
+
   CSKEvent:
     allOf:
       - $ref: '#/schemas/CSKEventSummary'
@@ -290,8 +687,7 @@ schemas:
       status:
         $ref: '#/schemas/AttendanceStatus'
       userId:
-        type: integer
-        format: int64
+        type: string
     required:
       - userId
 
@@ -300,7 +696,6 @@ schemas:
     properties:
       userId:
         type: string
-        format: uuid
       firstName:
         type: string
         example: Liam
@@ -319,7 +714,6 @@ schemas:
     properties:
       userId:
         type: string
-        format: uuid
       comments:
         type: string
         example: Looking forward to it!
@@ -334,7 +728,6 @@ schemas:
     properties:
       userId:
         type: string
-        format: uuid
       name:
         type: string
         example: Liam Cotton
@@ -406,4 +799,4 @@ securitySchemes:
     type: apiKey
     description: Authentication via JWT stored in a cookie
     in: cookie
-    name: better-auth.session-token
+    name: better-auth.session_token

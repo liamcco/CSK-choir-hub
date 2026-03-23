@@ -136,6 +136,22 @@ enum GroupType {
   OTHER
 }
 
+model GroupMembership {
+  userId   String
+  groupId  String
+  joinedAt DateTime @default(now())
+  leftAt   DateTime?
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+  @@index([groupId])
+  @@index([userId])
+  @@map("groupMembership")
+
+}
+
 model Group {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -411,20 +427,4 @@ enum Choir {
   MK
   DK
   KK
-}
-
-model GroupMembership {
-  userId   String
-  groupId  String
-  joinedAt DateTime @default(now())
-  leftAt   DateTime?
-
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
-
-  @@id([userId, groupId])
-  @@index([groupId])
-  @@index([userId])
-  @@map("groupMembership")
-
 }

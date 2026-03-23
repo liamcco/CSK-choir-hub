@@ -56,13 +56,23 @@ export async function deleteEvent(eventId: string) {
  * @returns The created event.
  */
 export async function createEvent(eventData: {
+  createdById: string;
   name: string;
   description?: string;
   dateStart: Date;
   type: EventType;
   place: string;
 }) {
-  return await eventModel.create(eventData);
+  const { createdById, ...rest } = eventData;
+
+  return await eventModel.create({
+    ...rest,
+    createdBy: {
+      connect: {
+        id: createdById,
+      },
+    },
+  });
 }
 
 /**

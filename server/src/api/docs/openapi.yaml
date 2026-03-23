@@ -17,9 +17,7 @@ servers:
 security:
   - authCookie: []
 
-# Paths grouped by feature area
 paths:
-  # Books
   /books:
     $ref: '../routes/books/books.yaml#/paths/~1books'
   /books/{bookId}:
@@ -29,7 +27,6 @@ paths:
   /books/{bookId}/songs/{songId}:
     $ref: '../routes/books/books.yaml#/paths/~1books~1{bookId}~1songs~1{songId}'
 
-  # Events
   /events:
     $ref: '../routes/events/events.yaml#/paths/~1events'
   /events/{eventId}:
@@ -39,27 +36,44 @@ paths:
   /events/{eventId}/attendances:
     $ref: '../routes/events/events.yaml#/paths/~1events~1{eventId}~1attendances'
 
-  # Groups
   /groups:
     $ref: '../routes/groups/groups.yaml#/paths/~1groups'
   /groups/{groupId}:
     $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}'
   /groups/{groupId}/users:
     $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1users'
-  /groups/{groupId}/roles:
-    $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1roles'
-  /groups/{groupId}/groups:
-    $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1groups'
+  /groups/{groupId}/users/{userId}:
+    $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1users~1{userId}'
+  /groups/{groupId}/children:
+    $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1children'
+  /groups/{groupId}/children/{childGroupId}:
+    $ref: '../routes/groups/groups.yaml#/paths/~1groups~1{groupId}~1children~1{childGroupId}'
 
-  # Roles
   /roles:
     $ref: '../routes/roles/roles.yaml#/paths/~1roles'
   /roles/{roleId}:
     $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}'
-  /roles/{roleId}/user:
-    $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}~1user'
+  /roles/{roleId}/users:
+    $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}~1users'
+  /roles/{roleId}/users/{userId}:
+    $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}~1users~1{userId}'
+  /roles/{roleId}/permissions:
+    $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}~1permissions'
+  /roles/{roleId}/permissions/{permissionId}:
+    $ref: '../routes/roles/roles.yaml#/paths/~1roles~1{roleId}~1permissions~1{permissionId}'
 
-  # Songs
+  /permissions:
+    $ref: '../routes/permissions/permissions.yaml#/paths/~1permissions'
+  /permissions/{permissionId}:
+    $ref: '../routes/permissions/permissions.yaml#/paths/~1permissions~1{permissionId}'
+  /permissions/{permissionId}/users:
+    $ref: '../routes/permissions/permissions.yaml#/paths/~1permissions~1{permissionId}~1users'
+  /permissions/{permissionId}/users/{userId}:
+    $ref: '../routes/permissions/permissions.yaml#/paths/~1permissions~1{permissionId}~1users~1{userId}'
+
+  /users:
+    $ref: '../routes/users/users.yaml#/paths/~1users'
+
   /songs:
     $ref: '../routes/songs/songs.yaml#/paths/~1songs'
   /songs/{songId}:
@@ -67,16 +81,68 @@ paths:
   /songs/{songId}/tags:
     $ref: '../routes/songs/songs.yaml#/paths/~1songs~1{songId}~1tags'
 
-  # Tags
   /tags:
     $ref: '../routes/tags/tags.yaml#/paths/~1tags'
   /tags/{tagId}:
     $ref: '../routes/tags/tags.yaml#/paths/~1tags~1{tagId}'
 
 components:
-  # Reusable schemas
   schemas:
-    # Events
+    GroupType:
+      $ref: './components.yaml#/schemas/GroupType'
+    PermissionEffect:
+      $ref: './components.yaml#/schemas/PermissionEffect'
+    UserSummary:
+      $ref: './components.yaml#/schemas/UserSummary'
+    GroupReference:
+      $ref: './components.yaml#/schemas/GroupReference'
+    GroupMember:
+      $ref: './components.yaml#/schemas/GroupMember'
+    Group:
+      $ref: './components.yaml#/schemas/Group'
+    CreateGroupInput:
+      $ref: './components.yaml#/schemas/CreateGroupInput'
+    UpdateGroupInput:
+      $ref: './components.yaml#/schemas/UpdateGroupInput'
+    AddUserToGroupInput:
+      $ref: './components.yaml#/schemas/AddUserToGroupInput'
+    AddChildGroupInput:
+      $ref: './components.yaml#/schemas/AddChildGroupInput'
+    RoleReference:
+      $ref: './components.yaml#/schemas/RoleReference'
+    RoleUserAssignment:
+      $ref: './components.yaml#/schemas/RoleUserAssignment'
+    Role:
+      $ref: './components.yaml#/schemas/Role'
+    CreateRoleInput:
+      $ref: './components.yaml#/schemas/CreateRoleInput'
+    UpdateRoleInput:
+      $ref: './components.yaml#/schemas/UpdateRoleInput'
+    AssignUserToRoleInput:
+      $ref: './components.yaml#/schemas/AssignUserToRoleInput'
+    AddPermissionToRoleInput:
+      $ref: './components.yaml#/schemas/AddPermissionToRoleInput'
+    PermissionReference:
+      $ref: './components.yaml#/schemas/PermissionReference'
+    PermissionUserGrant:
+      $ref: './components.yaml#/schemas/PermissionUserGrant'
+    Permission:
+      $ref: './components.yaml#/schemas/Permission'
+    CreatePermissionInput:
+      $ref: './components.yaml#/schemas/CreatePermissionInput'
+    UpdatePermissionInput:
+      $ref: './components.yaml#/schemas/UpdatePermissionInput'
+    GrantUserPermissionInput:
+      $ref: './components.yaml#/schemas/GrantUserPermissionInput'
+    AdminUserGroupMembership:
+      $ref: './components.yaml#/schemas/AdminUserGroupMembership'
+    AdminUserRoleAssignment:
+      $ref: './components.yaml#/schemas/AdminUserRoleAssignment'
+    AdminUserPermissionGrant:
+      $ref: './components.yaml#/schemas/AdminUserPermissionGrant'
+    AdminUser:
+      $ref: './components.yaml#/schemas/AdminUser'
+
     CSKEventType:
       $ref: './components.yaml#/schemas/CSKEventType'
     CSKEventSummary:
@@ -85,8 +151,6 @@ components:
       $ref: './components.yaml#/schemas/CSKEvent'
     CreateEventInput:
       $ref: './components.yaml#/schemas/CreateEventInput'
-
-    # Attendance & registration
     AttendanceStatus:
       $ref: './components.yaml#/schemas/AttendanceStatus'
     Attendance:
@@ -94,19 +158,6 @@ components:
     Registration:
       $ref: './components.yaml#/schemas/Registration'
 
-    # Groups & roles
-    GroupSummary:
-      $ref: './components.yaml#/schemas/GroupSummary'
-    Group:
-      $ref: './components.yaml#/schemas/Group'
-    GroupType:
-      $ref: './components.yaml#/schemas/GroupType'
-    RoleSummary:
-      $ref: './components.yaml#/schemas/RoleSummary'
-    Role:
-      $ref: './components.yaml#/schemas/Role'
-
-    # Music catalog
     BookSummary:
       $ref: './components.yaml#/schemas/BookSummary'
     Book:
@@ -130,11 +181,9 @@ components:
     CSKVoice:
       $ref: './components.yaml#/schemas/CSKVoice'
 
-    # Errors
     Error:
       $ref: './components.yaml#/schemas/Error'
 
-  # Reusable request bodies
   requestBodies:
     CreateEvent:
       $ref: './components.yaml#/requestBodies/CreateEvent'
@@ -143,7 +192,6 @@ components:
     MakeRegistration:
       $ref: './components.yaml#/requestBodies/MakeRegistration'
 
-  # Common responses
   responses:
     ErrorResponse:
       $ref: './components.yaml#/responses/ErrorResponse'

@@ -1,18 +1,22 @@
 import { Context } from 'hono';
 
+import { GroupType } from '@/prisma/generated/client';
 import { groupService } from '@/services';
 import { BadRequestError } from '@/utils/errors';
 
-// Get all groups
-export const getGroups = async (c: Context) => {
-  const type = c.req.query('type');
+import { getTrimmedString, parseEnumValue, requireTrimmedString } from './rbacUtils';
 
-  const groups = await groupService.getAllGroups();
+export const getGroups = async (c: Context) => {
+  const typeParam = c.req.query('type');
+  const type = typeParam
+    ? parseEnumValue(typeParam, Object.values(GroupType), 'type')
+    : undefined;
+
+  const groups = await groupService.getAllGroups(type);
 
   return c.json({ groups });
 };
 
-// Delete a group by ID
 export const deleteGroup = async (c: Context) => {
   const groupId = c.req.param('groupId');
 
@@ -23,96 +27,77 @@ export const deleteGroup = async (c: Context) => {
   return c.status(204);
 };
 
-// Create a new group
 export const createGroup = async (c: Context) => {
-  const { name, type, description } = await c.req.json();
+  const body = await c.req.json();
+  const key = requireTrimmedString(body.key, 'Group key is required');
+  const name = requireTrimmedString(body.name, 'Group name is required');
+  const type = parseEnumValue(body.type, Object.values(GroupType), 'type');
+  const description = getTrimmedString(body.description);
 
-  if (!name || !type) throw new BadRequestError('Group name and type are required');
+  const group = await groupService.createGroup({ key, name, type, description });
 
-  const newGroup = await groupService.createGroup({ name, type, description });
-
-  return c.json({ group: newGroup }, 201);
+  return c.json({ group }, 201);
 };
 
-// Update a group by ID
 export const updateGroup = async (c: Context) => {
   const groupId = c.req.param('groupId');
 
   if (!groupId) throw new BadRequestError('Invalid group ID');
 
-  const { name, description } = await c.req.json();
+  const body = await c.req.json();
+  const key = getTrimmedString(body.key);
+  const name = getTrimmedString(body.name);
+  const description = body.description === null ? undefined : getTrimmedString(body.description);
+  const type = body.type
+    ? parseEnumValue(body.type, Object.values(GroupType), 'type')
+    : undefined;
 
-  if (!name) throw new BadRequestError('Group name is required');
+  if (!key && !name && description === undefined && !type) {
+    throw new BadRequestError('At least one field must be provided');
+  }
 
-  const updatedGroup = await groupService.updateGroup(groupId, { name, description });
+  const group = await groupService.updateGroup(groupId, { key, name, type, description });
 
-  return c.json({ group: updatedGroup });
+  return c.json({ group });
 };
 
-// Add a subgroup to a group
 export const addGroupToGroup = async (c: Context) => {
   const parentGroupId = c.req.param('groupId');
-  const { subgroupId } = await c.req.json();
+  const body = await c.req.json();
+  const childGroupId = requireTrimmedString(body.childGroupId, 'childGroupId is required');
 
-  if (!parentGroupId || typeof subgroupId !== 'string' || !subgroupId.trim())
-    throw new BadRequestError('Invalid group ID or subgroup ID');
+  if (!parentGroupId) throw new BadRequestError('Invalid group ID');
 
-  await groupService.addGroup(parentGroupId, subgroupId);
+  await groupService.addGroup(parentGroupId, childGroupId);
 
   return c.status(204);
 };
 
-// Remove a subgroup from a group
 export const removeGroupFromGroup = async (c: Context) => {
   const parentGroupId = c.req.param('groupId');
-  const subgroupId = c.req.param('subgroupId');
+  const childGroupId = c.req.param('childGroupId');
 
-  if (!parentGroupId || !subgroupId) throw new BadRequestError('Invalid group ID or subgroup ID');
+  if (!parentGroupId || !childGroupId) {
+    throw new BadRequestError('Invalid group ID or child group ID');
+  }
 
-  await groupService.removeGroup(parentGroupId, subgroupId);
-
-  return c.status(204);
-};
-
-// Assign a role to a group
-export const addRoleToGroup = async (c: Context) => {
-  const groupId = c.req.param('groupId');
-  const { roleId } = await c.req.json();
-
-  if (!groupId || typeof roleId !== 'string' || !roleId.trim())
-    throw new BadRequestError('Invalid group ID or role ID');
-
-  await groupService.addRole(groupId, roleId);
+  await groupService.removeGroup(parentGroupId, childGroupId);
 
   return c.status(204);
 };
 
-// Remove a role from a group
-export const removeRoleFromGroup = async (c: Context) => {
-  const groupId = c.req.param('groupId');
-  const roleId = c.req.param('roleId');
-
-  if (!groupId || !roleId) throw new BadRequestError('Invalid group ID or role ID');
-
-  await groupService.removeRole(groupId, roleId);
-
-  return c.status(204);
-};
-
-// Add a user to a group
 export const addUserToGroup = async (c: Context) => {
-  const { userId } = await c.req.json();
   const groupId = c.req.param('groupId');
+  const body = await c.req.json();
+  const userId = requireTrimmedString(body.userId, 'userId is required');
 
-  if (typeof userId !== 'string' || !userId.trim() || !groupId)
-    throw new BadRequestError('Invalid user ID or group ID');
+  if (!groupId) throw new BadRequestError('Invalid group ID');
 
-  await groupService.addUser(userId.trim(), groupId);
+  await groupService.addUser(userId, groupId);
 
   return c.status(204);
 };
 
-// Remove a user from a group
 export const removeUserFromGroup = async (c: Context) => {
   const userId = c.req.param('userId');
   const groupId = c.req.param('groupId');

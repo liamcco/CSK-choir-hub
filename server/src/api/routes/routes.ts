@@ -4,9 +4,11 @@ import bookRoutes from './books';
 import eventRoutes from './events';
 import groupRoutes from './groups';
 import healthRoute from './health';
+import permissionRoutes from './permissions';
 import roleRoutes from './roles';
 import songRoutes from './songs';
 import tagRoutes from './tags';
+import userRoutes from './users';
 
 const router = new Hono();
 
@@ -14,8 +16,10 @@ router.route('/books', bookRoutes);
 router.route('/events', eventRoutes);
 router.route('/groups', groupRoutes);
 router.route('/roles', roleRoutes);
+router.route('/permissions', permissionRoutes);
 router.route('/songs', songRoutes);
 router.route('/tags', tagRoutes);
+router.route('/users', userRoutes);
 router.route('/health', healthRoute);
 
 export default router;

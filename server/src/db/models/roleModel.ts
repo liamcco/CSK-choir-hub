@@ -1,96 +1,140 @@
 import { prisma } from '@/db';
-import type { Prisma, Role } from '@/prisma/generated/client';
+import type { Prisma } from '@/prisma/generated/client';
 
-/**
- * Create a new role.
- * @param name Role name
- * @param description Role description (optional)
- */
-export async function create(data: Prisma.RoleCreateInput): Promise<Role> {
+const userSummarySelect = {
+  id: true,
+  name: true,
+  email: true,
+  username: true,
+  displayUsername: true,
+  role: true,
+} satisfies Prisma.UserSelect;
+
+const permissionSummarySelect = {
+  id: true,
+  key: true,
+  resource: true,
+  action: true,
+  description: true,
+} satisfies Prisma.PermissionSelect;
+
+const roleDetailsInclude = {
+  userRoles: {
+    orderBy: {
+      grantedAt: 'desc',
+    },
+    include: {
+      user: {
+        select: userSummarySelect,
+      },
+    },
+  },
+  rolePermissions: {
+    include: {
+      permission: {
+        select: permissionSummarySelect,
+      },
+    },
+  },
+} satisfies Prisma.RoleInclude;
+
+export async function create(data: Prisma.RoleCreateInput) {
   return prisma.role.create({
     data,
+    include: roleDetailsInclude,
   });
 }
 
-/**
- * Find a role by its ID.
- * @param id Role ID
- */
-export async function findById(id: string): Promise<Role | null> {
+export async function findById(id: string) {
   return prisma.role.findUnique({
     where: { id },
+    include: roleDetailsInclude,
   });
 }
 
-/**
- * Find a role by its name.
- * @param name Role name
- */
-export async function findByName(name: string): Promise<Role | null> {
+export async function findByKey(key: string) {
   return prisma.role.findUnique({
-    where: { name },
+    where: { key },
+    include: roleDetailsInclude,
   });
 }
 
-/**
- * Update a role's information.
- * @param id Role ID
- * @param data Fields to update
- */
-export async function update(
-  id: string,
-  data: Partial<{ name: string; description: string }>,
-): Promise<Role> {
+export async function update(id: string, data: Prisma.RoleUpdateInput) {
   return prisma.role.update({
     where: { id },
     data,
+    include: roleDetailsInclude,
   });
 }
 
-/**
- * Delete a role by its ID.
- * @param id Role ID
- */
-export async function deleteById(id: string): Promise<Role> {
+export async function deleteById(id: string) {
   return prisma.role.delete({
     where: { id },
   });
 }
 
-/**
- * List all roles.
- */
-export async function findAll(): Promise<Role[]> {
-  return prisma.role.findMany();
-}
-
-/**
- * Get a user with a specific role.
- * @param roleId Role ID
- */
-export async function getUserWithRole(roleId: string) {
-  return prisma.role.findUnique({
-    where: { id: roleId },
-    include: { user: true },
+export async function findAll() {
+  return prisma.role.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+    include: roleDetailsInclude,
   });
 }
 
-// Assigns a role to a user (many-to-many relation).
-export const assignUser = async (userId: string, roleId: string) => {
-  return prisma.user.update({
-    where: { id: userId },
-    data: {
-      roles: { connect: { id: roleId } },
+export const assignUser = async (userId: string, roleId: string, expiresAt?: Date) => {
+  return prisma.userRole.upsert({
+    where: {
+      userId_roleId: {
+        userId,
+        roleId,
+      },
+    },
+    create: {
+      user: { connect: { id: userId } },
+      role: { connect: { id: roleId } },
+      expiresAt,
+    },
+    update: {
+      expiresAt,
     },
   });
 };
 
-// Removes a role from a user (one-to-one relation).
-export const removeUser = async (roleId: string) => {
-  return prisma.role.update({
-    where: { id: roleId },
-    data: {
-      userId: null,
+export const removeUser = async (userId: string, roleId: string) => {
+  return prisma.userRole.delete({
+    where: {
+      userId_roleId: {
+        userId,
+        roleId,
+      },
+    },
+  });
+};
+
+export const addPermission = async (roleId: string, permissionId: string) => {
+  return prisma.rolePermission.upsert({
+    where: {
+      roleId_permissionId: {
+        roleId,
+        permissionId,
+      },
+    },
+    create: {
+      role: { connect: { id: roleId } },
+      permission: { connect: { id: permissionId } },
+    },
+    update: {},
+  });
+};
+
+export const removePermission = async (roleId: string, permissionId: string) => {
+  return prisma.rolePermission.delete({
+    where: {
+      roleId_permissionId: {
+        roleId,
+        permissionId,
+      },
     },
   });
 };

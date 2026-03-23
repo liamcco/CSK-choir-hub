@@ -1,51 +1,102 @@
-import { groupModel } from '@/db';
+import { groupModel, userModel } from '@/db';
 import { type GroupType } from '@/prisma/generated/client';
-import { NotFoundError } from '@/utils/errors';
+import { ConflictError, NotFoundError } from '@/utils/errors';
 
-/**
- * Get all groups in the system.
- * @returns All groups in the system.
- */
-export async function getAllGroups() {
-  return await groupModel.findAll();
+import { mapGroupSummary, mapUserSummary } from './rbacMappers';
+
+export async function getAllGroups(type?: GroupType) {
+  const groups = await groupModel.findAll(type ? { type } : undefined);
+
+  return groups.map((group) => ({
+    id: group.id,
+    key: group.key,
+    name: group.name,
+    type: group.type,
+    description: group.description ?? null,
+    createdAt: group.createdAt.toISOString(),
+    updatedAt: group.updatedAt.toISOString(),
+    members: group.memberships.map((membership) => ({
+      ...mapUserSummary(membership.user),
+      joinedAt: membership.joinedAt.toISOString(),
+      leftAt: membership.leftAt?.toISOString() ?? null,
+    })),
+    parents: group.parentRelations.map((relation) => mapGroupSummary(relation.parent)),
+    children: group.childRelations.map((relation) => mapGroupSummary(relation.child)),
+  }));
 }
 
-/**
- * Delete a group by ID.
- * @param groupId - The ID of the group to delete.
- */
 export async function deleteGroup(groupId: string) {
+  const group = await groupModel.findById(groupId);
+
+  if (!group) throw new NotFoundError('Group not found');
+
   await groupModel.deleteById(groupId);
 }
 
-/**
- * Create a new group.
- * @param data - The group data.
- * @returns The created group.
- */
-export async function createGroup(data: { name: string; type: GroupType; description?: string }) {
-  return await groupModel.create(data);
+export async function createGroup(data: {
+  key: string;
+  name: string;
+  type: GroupType;
+  description?: string;
+}) {
+  const existingGroup = await groupModel.findByKey(data.key);
+
+  if (existingGroup) {
+    throw new ConflictError('A group with that key already exists');
+  }
+
+  const createdGroup = await groupModel.create(data);
+
+  return {
+    id: createdGroup.id,
+    key: createdGroup.key,
+    name: createdGroup.name,
+    type: createdGroup.type,
+    description: createdGroup.description ?? null,
+    createdAt: createdGroup.createdAt.toISOString(),
+    updatedAt: createdGroup.updatedAt.toISOString(),
+    members: [],
+    parents: [],
+    children: [],
+  };
 }
 
-/**
- * Update a group by ID.
- * @param groupId - The ID of the group to update.
- * @param data - The updated group data.
- * @returns The updated group.
- */
 export async function updateGroup(
   groupId: string,
-  data: { name?: string; type?: GroupType; description?: string },
+  data: { key?: string; name?: string; type?: GroupType; description?: string },
 ) {
-  return await groupModel.update(groupId, data);
+  const existingGroup = await groupModel.findById(groupId);
+
+  if (!existingGroup) throw new NotFoundError('Group not found');
+
+  if (data.key && data.key !== existingGroup.key) {
+    const groupWithKey = await groupModel.findByKey(data.key);
+
+    if (groupWithKey) {
+      throw new ConflictError('A group with that key already exists');
+    }
+  }
+
+  const updatedGroup = await groupModel.update(groupId, data);
+
+  return {
+    id: updatedGroup.id,
+    key: updatedGroup.key,
+    name: updatedGroup.name,
+    type: updatedGroup.type,
+    description: updatedGroup.description ?? null,
+    createdAt: updatedGroup.createdAt.toISOString(),
+    updatedAt: updatedGroup.updatedAt.toISOString(),
+    members: updatedGroup.memberships.map((membership) => ({
+      ...mapUserSummary(membership.user),
+      joinedAt: membership.joinedAt.toISOString(),
+      leftAt: membership.leftAt?.toISOString() ?? null,
+    })),
+    parents: updatedGroup.parentRelations.map((relation) => mapGroupSummary(relation.parent)),
+    children: updatedGroup.childRelations.map((relation) => mapGroupSummary(relation.child)),
+  };
 }
 
-/**
- * Add a subgroup to a parent group.
- * @param parentGroupId - The ID of the parent group.
- * @param subgroupId - The ID of the subgroup to add.
- * @returns {Promise<void>}
- */
 export async function addGroup(parentGroupId: string, subgroupId: string) {
   const parentGroup = await groupModel.findById(parentGroupId);
 
@@ -55,15 +106,13 @@ export async function addGroup(parentGroupId: string, subgroupId: string) {
 
   if (!subgroup) throw new NotFoundError('Subgroup not found');
 
-  return await groupModel.addGroup(parentGroupId, subgroupId);
+  if (parentGroupId === subgroupId) {
+    throw new ConflictError('A group cannot be a child of itself');
+  }
+
+  await groupModel.addGroup(parentGroupId, subgroupId);
 }
 
-/**
- * Remove a subgroup from a parent group.
- * @param parentGroupId - The ID of the parent group.
- * @param subgroupId - The ID of the subgroup to remove.
- * @returns {Promise<void>}
- */
 export async function removeGroup(parentGroupId: string, subgroupId: string) {
   const parentGroup = await groupModel.findById(parentGroupId);
 
@@ -73,61 +122,25 @@ export async function removeGroup(parentGroupId: string, subgroupId: string) {
 
   if (!subgroup) throw new NotFoundError('Subgroup not found');
 
-  return await groupModel.removeGroup(parentGroupId, subgroupId);
+  await groupModel.removeGroup(parentGroupId, subgroupId);
 }
 
-/**
- * Add a group to a user.
- * @param {string} userId - The user ID.
- * @param {string} groupId - The group ID.
- * @returns {Promise<void>}
- */
 export async function addUser(userId: string, groupId: string): Promise<void> {
+  const user = await userModel.findById(userId);
+  const group = await groupModel.findById(groupId);
+
+  if (!user) throw new NotFoundError('User not found');
+  if (!group) throw new NotFoundError('Group not found');
+
   await groupModel.addUser(userId, groupId);
 }
 
-/**
- * Remove a group from a user.
- * @param {string} userId - The user ID.
- * @param {string} groupId - The group ID.
- * @returns {Promise<void>}
- */
 export async function removeUser(userId: string, groupId: string): Promise<void> {
+  const user = await userModel.findById(userId);
+  const group = await groupModel.findById(groupId);
+
+  if (!user) throw new NotFoundError('User not found');
+  if (!group) throw new NotFoundError('Group not found');
+
   await groupModel.removeUser(userId, groupId);
-}
-
-/**
- * Add a role to a group.
- * @param groupId - The ID of the group to add the role to.
- * @param roleId - The ID of the role to add.
- * @returns {Promise<void>}
- */
-export async function addRole(groupId: string, roleId: string) {
-  const group = await groupModel.findById(groupId);
-
-  if (!group) throw new NotFoundError('Group not found');
-
-  const role = await groupModel.findById(roleId);
-
-  if (!role) throw new NotFoundError('Role not found');
-
-  return await groupModel.addRole(groupId, roleId);
-}
-
-/**
- * Remove a role from a group.
- * @param groupId - The ID of the group to remove the role from.
- * @param roleId - The ID of the role to remove.
- * @returns {Promise<void>}
- */
-export async function removeRole(groupId: string, roleId: string) {
-  const group = await groupModel.findById(groupId);
-
-  if (!group) throw new NotFoundError('Group not found');
-
-  const role = await groupModel.findById(roleId);
-
-  if (!role) throw new NotFoundError('Role not found');
-
-  return await groupModel.removeRole(groupId, roleId);
 }

@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 
 import { eventService } from '@/services';
-import { BadRequestError, NotFoundError } from '@/utils/errors';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '@/utils/errors';
 
 // Get all events
 export const getEvents = async (c: Context) => {
@@ -36,7 +36,10 @@ export const deleteEvent = async (c: Context) => {
 
 // Create a new event
 export const createEvent = async (c: Context) => {
+  const user = c.get('user') as { id: string } | null;
   const { name, type, description, dateStart: _dateStart, place } = await c.req.json();
+
+  if (!user?.id) throw new UnauthorizedError('Authentication required');
 
   if (!name || !_dateStart || !place)
     throw new BadRequestError('Name, start date, and place are required');
@@ -46,7 +49,14 @@ export const createEvent = async (c: Context) => {
   if (isNaN(dateStart.getTime())) {
     throw new BadRequestError('Invalid date format: expected ISO-8601 string');
   }
-  const newEvent = await eventService.createEvent({ name, type, description, dateStart, place });
+  const newEvent = await eventService.createEvent({
+    createdById: user.id,
+    name,
+    type,
+    description,
+    dateStart,
+    place,
+  });
 
   return c.json({ event: newEvent }, 201);
 };

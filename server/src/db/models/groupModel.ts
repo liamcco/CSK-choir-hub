@@ -1,159 +1,167 @@
 import { prisma } from '@/db';
-import { type GroupType } from '@/prisma/generated/client';
-import { type Prisma } from '@/prisma/generated/client';
+import { type GroupType, type Prisma } from '@/prisma/generated/client';
 
-/**
- * Creates a new group with the given data.
- * @param data - The group data to create.
- * @returns The created group.
- */
+const userSummarySelect = {
+  id: true,
+  name: true,
+  email: true,
+  username: true,
+  displayUsername: true,
+  role: true,
+} satisfies Prisma.UserSelect;
+
+const groupSummarySelect = {
+  id: true,
+  key: true,
+  name: true,
+  type: true,
+} satisfies Prisma.GroupSelect;
+
+const groupDetailsInclude = {
+  memberships: {
+    where: {
+      leftAt: null,
+    },
+    orderBy: {
+      joinedAt: 'asc',
+    },
+    include: {
+      user: {
+        select: userSummarySelect,
+      },
+    },
+  },
+  parentRelations: {
+    include: {
+      parent: {
+        select: groupSummarySelect,
+      },
+    },
+  },
+  childRelations: {
+    include: {
+      child: {
+        select: groupSummarySelect,
+      },
+    },
+  },
+} satisfies Prisma.GroupInclude;
+
 export async function create(data: Prisma.GroupCreateInput) {
-  return await prisma.group.create({
-    data: data,
+  return prisma.group.create({
+    data,
+    include: groupDetailsInclude,
   });
 }
 
-/**
- * Finds a group by its ID.
- * @param id - The ID of the group to find.
- * @returns The group if found, otherwise null.
- */
 export async function findById(id: string) {
-  return await prisma.group.findUnique({
+  return prisma.group.findUnique({
     where: { id },
+    include: groupDetailsInclude,
   });
 }
 
-/**
- * Updates a group with the given data.
- * @param id - The ID of the group to update.
- * @param data - The data to update.
- * @returns The updated group.
- */
-export async function update(id: string, data: { name?: string; description?: string }) {
-  return await prisma.group.update({
+export async function findByKey(key: string) {
+  return prisma.group.findUnique({
+    where: { key },
+    include: groupDetailsInclude,
+  });
+}
+
+export async function update(id: string, data: Prisma.GroupUpdateInput) {
+  return prisma.group.update({
     where: { id },
     data,
+    include: groupDetailsInclude,
   });
 }
 
-/**
- * Deletes a group by its ID.
- * @param id - The ID of the group to delete.
- * @returns The deleted group.
- */
 export async function deleteById(id: string) {
-  return await prisma.group.delete({
+  return prisma.group.delete({
     where: { id },
   });
 }
 
-/**
- * Lists groups, optionally filtered by type or name.
- * @returns An array of groups matching the filters.
- */
-export async function findAll() {
-  return await prisma.group.findMany();
+export async function findAll(filters?: { type?: GroupType }) {
+  return prisma.group.findMany({
+    where: filters?.type
+      ? {
+          type: filters.type,
+        }
+      : undefined,
+    orderBy: [{ type: 'asc' }, { name: 'asc' }],
+    include: groupDetailsInclude,
+  });
 }
 
-/**
- * Finds groups matching the given filters.
- * @param filters - The filters to apply (type and/or name).
- * @returns An array of groups matching the filters.
- */
 export async function findBy(filters: { type?: GroupType; name?: string }) {
-  const where: any = {};
+  const where: Prisma.GroupWhereInput = {};
 
   if (filters.type) where.type = filters.type;
   if (filters.name) where.name = { contains: filters.name, mode: 'insensitive' };
 
-  return await prisma.group.findMany({ where });
-}
-
-/**
- * Lists members of a group.
- * @param groupId - The ID of the group.
- * @returns An array of users who are members of the group.
- */
-// TODO - users can be member of several subgroups of the same parent group, so we need to deduplicate the users
-export async function listGroupMembers(groupId: string, visited: Set<string> = new Set()) {
-  if (visited.has(groupId)) return [];
-  visited.add(groupId);
-
-  const group = await prisma.group.findUnique({
-    where: { id: groupId },
-    include: { members: true, children: true },
+  return prisma.group.findMany({
+    where,
+    orderBy: [{ type: 'asc' }, { name: 'asc' }],
+    include: groupDetailsInclude,
   });
-
-  if (!group) return [];
-
-  const members = group.members;
-
-  for (const subgroup of group.children) {
-    const subgroupMembers = await listGroupMembers(subgroup.id, visited);
-
-    members.push(...subgroupMembers);
-  }
-
-  return members;
 }
 
-// Adds a user to a group (many-to-many relation).
 export const addUser = async (userId: string, groupId: string) => {
-  return prisma.user.update({
-    where: { id: userId },
-    data: {
-      groups: { connect: { id: groupId } },
+  return prisma.groupMembership.upsert({
+    where: {
+      userId_groupId: {
+        userId,
+        groupId,
+      },
+    },
+    create: {
+      user: { connect: { id: userId } },
+      group: { connect: { id: groupId } },
+    },
+    update: {
+      leftAt: null,
     },
   });
 };
 
-// Removes a user from a group (many-to-many relation).
 export const removeUser = async (userId: string, groupId: string) => {
-  return prisma.user.update({
-    where: { id: userId },
+  return prisma.groupMembership.update({
+    where: {
+      userId_groupId: {
+        userId,
+        groupId,
+      },
+    },
     data: {
-      groups: { disconnect: { id: groupId } },
+      leftAt: new Date(),
     },
   });
 };
 
-// Adds a role to a group (many-to-many relation).
-export const addRole = async (groupId: string, roleId: string) => {
-  return prisma.group.update({
-    where: { id: groupId },
-    data: {
-      roles: { connect: { id: roleId } },
-    },
-  });
-};
-
-// Removes a role from a group (many-to-many relation).
-export const removeRole = async (roleId: string, groupId: string) => {
-  return prisma.group.update({
-    where: { id: groupId },
-    data: {
-      roles: { disconnect: { id: roleId } },
-    },
-  });
-};
-
-// Adds a subgroup to a parent group (self-referential many-to-many relation).
 export const addGroup = async (parentGroupId: string, subgroupId: string) => {
-  return prisma.group.update({
-    where: { id: parentGroupId },
-    data: {
-      children: { connect: { id: subgroupId } },
+  return prisma.groupRelation.upsert({
+    where: {
+      parentId_childId: {
+        parentId: parentGroupId,
+        childId: subgroupId,
+      },
     },
+    create: {
+      parent: { connect: { id: parentGroupId } },
+      child: { connect: { id: subgroupId } },
+    },
+    update: {},
   });
 };
 
-// Removes a subgroup from a parent group (self-referential many-to-many relation).
 export const removeGroup = async (parentGroupId: string, subgroupId: string) => {
-  return prisma.group.update({
-    where: { id: parentGroupId },
-    data: {
-      children: { disconnect: { id: subgroupId } },
+  return prisma.groupRelation.delete({
+    where: {
+      parentId_childId: {
+        parentId: parentGroupId,
+        childId: subgroupId,
+      },
     },
   });
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,15 +9,31 @@ import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
 import { cn } from '@/utils/ui/utils';
 
+function getRedirectTarget(next: string | null) {
+  if (!next || !next.startsWith('/') || next.startsWith('//')) {
+    return '/';
+  }
+
+  return next;
+}
+
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
-  const t = useTranslations();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
-    await authClient.signIn.email({ email: username, password });
+    const response = await authClient.signIn.email({ email: username, password });
+
+    if (response.error) {
+      return;
+    }
+
+    router.replace(getRedirectTarget(searchParams.get('next')));
+    router.refresh();
   };
 
   return (

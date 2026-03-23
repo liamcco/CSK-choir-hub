@@ -2,6 +2,8 @@ export * as booksController from './booksController';
 export * as eventsController from './eventsController';
 export * as groupsController from './groupsController';
 export * as healthController from './healthController';
+export * as permissionsController from './permissionsController';
 export * as rolesController from './rolesController';
 export * as songsController from './songsController';
 export * as tagsController from './tagsController';
+export * as usersController from './usersController';

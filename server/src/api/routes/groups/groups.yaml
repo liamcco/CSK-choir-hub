@@ -24,29 +24,20 @@ paths:
                     type: array
                     items:
                       $ref: '../../docs/openapi.yaml#/components/schemas/Group'
+                required:
+                  - groups
     post:
       tags:
         - groups
       summary: Create group
       description: Creates a new group (Admins only).
-      operationId: addGroup
+      operationId: createGroup
       requestBody:
-        description: Group to create
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                type:
-                  $ref: '../../docs/openapi.yaml#/components/schemas/GroupType'
-                description:
-                  type: string
-              required:
-                - name
-                - type
+              $ref: '../../docs/openapi.yaml#/components/schemas/CreateGroupInput'
       responses:
         '201':
           description: Group created
@@ -57,6 +48,8 @@ paths:
                 properties:
                   group:
                     $ref: '../../docs/openapi.yaml#/components/schemas/Group'
+                required:
+                  - group
 
   /groups/{groupId}:
     parameters:
@@ -71,20 +64,14 @@ paths:
       tags:
         - groups
       summary: Update group
-      description: Updates name/description (Admins only).
+      description: Updates a group (Admins only).
       operationId: updateGroup
       requestBody:
-        description: Group fields to update
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
+              $ref: '../../docs/openapi.yaml#/components/schemas/UpdateGroupInput'
       responses:
         '200':
           description: Group updated
@@ -95,6 +82,8 @@ paths:
                 properties:
                   group:
                     $ref: '../../docs/openapi.yaml#/components/schemas/Group'
+                required:
+                  - group
     delete:
       tags:
         - groups
@@ -118,42 +107,19 @@ paths:
       tags:
         - groups
       summary: Add user to group
-      description: Adds a user to the group (Admins only).
+      description: Adds or reactivates a user membership in the group (Admins only).
       operationId: addUserToGroup
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                userId:
-                  type: string
-                  format: uuid
-              required:
-                - userId
+              $ref: '../../docs/openapi.yaml#/components/schemas/AddUserToGroupInput'
       responses:
         '204':
-          description: User added
-    delete:
-      tags:
-        - groups
-      summary: Remove user from group
-      description: Removes a user from the group (Admins only).
-      operationId: removeUserFromGroup
-      parameters:
-        - name: userId
-          in: path
-          description: ID of the user to remove
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: User removed
+          description: User added to group
 
-  /groups/{groupId}/roles:
+  /groups/{groupId}/users/{userId}:
     parameters:
       - name: groupId
         in: path
@@ -162,46 +128,23 @@ paths:
         schema:
           type: string
           format: uuid
-    post:
-      tags:
-        - groups
-      summary: Add role to group
-      description: Assigns a role to the group (Admins only).
-      operationId: addRoleToGroup
-      requestBody:
+      - name: userId
+        in: path
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                roleId:
-                  type: string
-                  format: uuid
-              required:
-                - roleId
-      responses:
-        '204':
-          description: Role assigned
+        description: ID of the user
+        schema:
+          type: string
     delete:
       tags:
         - groups
-      summary: Remove role from group
-      description: Removes a role from the group (Admins only).
-      operationId: removeRoleFromGroup
-      parameters:
-        - name: roleId
-          in: path
-          description: ID of the role to remove
-          required: true
-          schema:
-            type: string
-            format: uuid
+      summary: Remove user from group
+      description: Ends a user's active membership in the group (Admins only).
+      operationId: removeUserFromGroup
       responses:
         '204':
-          description: Role removed
+          description: User removed from group
 
-  /groups/{groupId}/groups:
+  /groups/{groupId}/children:
     parameters:
       - name: groupId
         in: path
@@ -213,38 +156,41 @@ paths:
     post:
       tags:
         - groups
-      summary: Add subgroup
-      description: Adds a subgroup to a parent group (Admins only).
-      operationId: addGroupToGroup
+      summary: Add child group
+      description: Adds a child group to the parent group (Admins only).
+      operationId: addGroupChild
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                subgroupId:
-                  type: string
-                  format: uuid
-              required:
-                - subgroupId
+              $ref: '../../docs/openapi.yaml#/components/schemas/AddChildGroupInput'
       responses:
         '204':
-          description: Subgroup added
+          description: Child group added
+
+  /groups/{groupId}/children/{childGroupId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        description: ID of the parent group
+        schema:
+          type: string
+          format: uuid
+      - name: childGroupId
+        in: path
+        required: true
+        description: ID of the child group
+        schema:
+          type: string
+          format: uuid
     delete:
       tags:
         - groups
-      summary: Remove subgroup
-      description: Removes a subgroup from a parent group (Admins only).
-      operationId: removeGroupFromGroup
-      parameters:
-        - name: subgroupId
-          in: path
-          description: ID of the subgroup to remove
-          required: true
-          schema:
-            type: string
-            format: uuid
+      summary: Remove child group
+      description: Removes a child group from the parent group (Admins only).
+      operationId: removeGroupChild
       responses:
         '204':
-          description: Subgroup removed
+          description: Child group removed

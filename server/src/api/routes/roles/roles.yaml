@@ -17,25 +17,20 @@ paths:
                     type: array
                     items:
                       $ref: '../../docs/openapi.yaml#/components/schemas/Role'
+                required:
+                  - roles
     post:
       tags:
         - roles
       summary: Create role
-      description: Creates a new role.
+      description: Creates a new role (Admins only).
       operationId: createRole
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-              required:
-                - name
+              $ref: '../../docs/openapi.yaml#/components/schemas/CreateRoleInput'
       responses:
         '201':
           description: Role created
@@ -46,27 +41,10 @@ paths:
                 properties:
                   role:
                     $ref: '../../docs/openapi.yaml#/components/schemas/Role'
+                required:
+                  - role
 
   /roles/{roleId}:
-    parameters:
-      - name: roleId
-        in: path
-        required: true
-        description: ID of the role
-        schema:
-          type: string
-          format: uuid
-    delete:
-      tags:
-        - roles
-      summary: Delete role
-      description: Deletes a role (Admins only).
-      operationId: deleteRole
-      responses:
-        '204':
-          description: Role deleted
-
-  /roles/{roleId}/user:
     parameters:
       - name: roleId
         in: path
@@ -78,30 +56,134 @@ paths:
     put:
       tags:
         - roles
+      summary: Update role
+      description: Updates a role (Admins only).
+      operationId: updateRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../docs/openapi.yaml#/components/schemas/UpdateRoleInput'
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    $ref: '../../docs/openapi.yaml#/components/schemas/Role'
+                required:
+                  - role
+    delete:
+      tags:
+        - roles
+      summary: Delete role
+      description: Deletes a role (Admins only).
+      operationId: deleteRole
+      responses:
+        '204':
+          description: Role deleted
+
+  /roles/{roleId}/users:
+    parameters:
+      - name: roleId
+        in: path
+        required: true
+        description: ID of the role
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - roles
       summary: Assign user to role
-      description: Assigns a user to a role (Admins only).
+      description: Assigns a role to a user (Admins only).
       operationId: assignUserToRole
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                userId:
-                  type: string
-                  format: uuid
-              required:
-                - userId
+              $ref: '../../docs/openapi.yaml#/components/schemas/AssignUserToRoleInput'
       responses:
         '204':
-          description: User assigned
+          description: User assigned to role
+
+  /roles/{roleId}/users/{userId}:
+    parameters:
+      - name: roleId
+        in: path
+        required: true
+        description: ID of the role
+        schema:
+          type: string
+          format: uuid
+      - name: userId
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: string
     delete:
       tags:
         - roles
       summary: Remove user from role
-      description: Removes the user assignment from the role (Admins only).
+      description: Removes a user's role assignment (Admins only).
       operationId: removeUserFromRole
       responses:
         '204':
-          description: User removed
+          description: User removed from role
+
+  /roles/{roleId}/permissions:
+    parameters:
+      - name: roleId
+        in: path
+        required: true
+        description: ID of the role
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - roles
+      summary: Add permission to role
+      description: Grants a permission to a role (Admins only).
+      operationId: addPermissionToRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../docs/openapi.yaml#/components/schemas/AddPermissionToRoleInput'
+      responses:
+        '204':
+          description: Permission added to role
+
+  /roles/{roleId}/permissions/{permissionId}:
+    parameters:
+      - name: roleId
+        in: path
+        required: true
+        description: ID of the role
+        schema:
+          type: string
+          format: uuid
+      - name: permissionId
+        in: path
+        required: true
+        description: ID of the permission
+        schema:
+          type: string
+          format: uuid
+    delete:
+      tags:
+        - roles
+      summary: Remove permission from role
+      description: Removes a permission from a role (Admins only).
+      operationId: removePermissionFromRole
+      responses:
+        '204':
+          description: Permission removed from role

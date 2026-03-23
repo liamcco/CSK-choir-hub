@@ -1,0 +1,138 @@
+paths:
+  /permissions:
+    get:
+      tags:
+        - permissions
+      summary: List permissions
+      operationId: getPermissions
+      responses:
+        '200':
+          description: Permissions fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  permissions:
+                    type: array
+                    items:
+                      $ref: '../../docs/openapi.yaml#/components/schemas/Permission'
+                required:
+                  - permissions
+    post:
+      tags:
+        - permissions
+      summary: Create permission
+      description: Creates a new permission (Admins only).
+      operationId: createPermission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../docs/openapi.yaml#/components/schemas/CreatePermissionInput'
+      responses:
+        '201':
+          description: Permission created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  permission:
+                    $ref: '../../docs/openapi.yaml#/components/schemas/Permission'
+                required:
+                  - permission
+
+  /permissions/{permissionId}:
+    parameters:
+      - name: permissionId
+        in: path
+        required: true
+        description: ID of the permission
+        schema:
+          type: string
+          format: uuid
+    put:
+      tags:
+        - permissions
+      summary: Update permission
+      description: Updates a permission (Admins only).
+      operationId: updatePermission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../docs/openapi.yaml#/components/schemas/UpdatePermissionInput'
+      responses:
+        '200':
+          description: Permission updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  permission:
+                    $ref: '../../docs/openapi.yaml#/components/schemas/Permission'
+                required:
+                  - permission
+    delete:
+      tags:
+        - permissions
+      summary: Delete permission
+      description: Deletes a permission (Admins only).
+      operationId: deletePermission
+      responses:
+        '204':
+          description: Permission deleted
+
+  /permissions/{permissionId}/users:
+    parameters:
+      - name: permissionId
+        in: path
+        required: true
+        description: ID of the permission
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - permissions
+      summary: Grant direct permission to user
+      description: Grants or updates a direct user permission (Admins only).
+      operationId: grantUserPermission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../docs/openapi.yaml#/components/schemas/GrantUserPermissionInput'
+      responses:
+        '204':
+          description: User permission granted
+
+  /permissions/{permissionId}/users/{userId}:
+    parameters:
+      - name: permissionId
+        in: path
+        required: true
+        description: ID of the permission
+        schema:
+          type: string
+          format: uuid
+      - name: userId
+        in: path
+        required: true
+        description: ID of the user
+        schema:
+          type: string
+    delete:
+      tags:
+        - permissions
+      summary: Revoke direct permission from user
+      description: Removes a direct user permission grant (Admins only).
+      operationId: revokeUserPermission
+      responses:
+        '204':
+          description: User permission revoked
